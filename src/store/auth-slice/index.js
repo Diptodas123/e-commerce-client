@@ -28,7 +28,7 @@ export const loginUser = createAsyncThunk("auth/login",
             });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data || { message: "Registration failed" });
+            return rejectWithValue(error.response?.data || { message: "Login failed" });
         }
     }
 );
@@ -79,10 +79,10 @@ const authSlice = createSlice({
         });
         builder.addCase(checkAuth.pending, (state) => {
             state.isLoading = true;
-        }).addCase(checkAuth.fulfilled, (state, action) => {
+        }).addCase(checkAuth.fulfilled, (state, action) => {            
             state.isLoading = false;
             state.isAuthenticated = true;
-            state.user = action.payload.data.user;
+            state.user = action.payload.data;
         }).addCase(checkAuth.rejected, (state) => {
             state.isLoading = false;
             state.isAuthenticated = false;

@@ -145,3 +145,7 @@
   border-color: #2563eb !important;
   color: white !important;
 }
+
+button{
+  cursor: pointer;
+}

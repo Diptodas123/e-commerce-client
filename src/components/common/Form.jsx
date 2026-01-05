@@ -59,7 +59,7 @@ const CommonForm = ({
                             <button
                                 type="button"
                                 onClick={() => togglePasswordVisibility(getControlItem.name)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 {showPassword[getControlItem.name] ? (
                                     <EyeOff className="h-4 w-4" />
@@ -149,7 +149,7 @@ const CommonForm = ({
                 }
             </div>
             {/* Submit Button */}
-            <Button type="submit" className='mt-3 w-full hover:cursor-pointer' disabled={disableSubmitButton}>
+            <Button type="submit" className='mt-3 w-full' disabled={disableSubmitButton}>
                 {buttonText || 'Submit'}
             </Button>
         </form>
