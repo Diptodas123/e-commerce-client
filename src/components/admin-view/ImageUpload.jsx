@@ -5,6 +5,8 @@ import { FileIcon, UploadCloudIcon, XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { Skeleton } from "@/components/ui/skeleton"
+import { useSelector } from 'react-redux';
 
 const ProductImageUpload = ({
     imageFile,
@@ -12,7 +14,9 @@ const ProductImageUpload = ({
     uploadedImageUrl,
     setUploadedImageUrl,
     imageLoading,
-    setImageLoading
+    setImageLoading,
+    imageLoadingState,
+    setImageLoadingState,
 }) => {
 
     const inputRef = useRef(null);
@@ -49,17 +53,17 @@ const ProductImageUpload = ({
     }
 
     const uploadedImageToCloudinary = async () => {
-        setImageLoading(true);
+        setImageLoadingState(true);
         const data = new FormData();
         data.append('image', imageFile);
 
         try {
             const response = await axios.post(`http://localhost:3000/api/admin/products/upload-image`, data, {
+                withCredentials: true,
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log(response?.data?.data?.imageUrl);
 
             if (response?.data?.status === 'success') {
                 setUploadedImageUrl(response?.data?.data?.imageUrl);
@@ -72,15 +76,15 @@ const ProductImageUpload = ({
                 position: "top-right",
             });
         } finally {
-            setImageLoading(false);
+            setImageLoadingState(false);
         }
     }
 
     useEffect(() => {
-        if (imageFile) {
+        if (imageFile && !uploadedImageUrl) {
             uploadedImageToCloudinary();
         }
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imageFile]);
 
 
@@ -111,20 +115,24 @@ const ProductImageUpload = ({
                             <span>Drag & drop or Click to upload image</span>
                         </Label>
                     ) : (
-                        <div className='flex items-center justify-between'>
-                            <div className='flex items-center'>
-                                <FileIcon className='w-8 text-primary mr-2 h-8' />
+                        imageLoadingState ? (
+                            <Skeleton className={'h-10 bg-gray-100'} />
+                        ) : (
+                            <div className='flex items-center justify-between'>
+                                <div className='flex items-center'>
+                                    <FileIcon className='w-8 text-primary mr-2 h-8' />
+                                </div>
+                                <p className='text-sm font-medium'>{imageFile.name}</p>
+                                <Button
+                                    variant='ghost'
+                                    size='icon'
+                                    className={"text-muted-foreground hover:text-foreground"}
+                                    onClick={handleRemoveImage}>
+                                    <XIcon className='w-4 h-4' />
+                                    <span className='sr-only'>Remove image</span>
+                                </Button>
                             </div>
-                            <p className='text-sm font-medium'>{imageFile.name}</p>
-                            <Button
-                                variant='ghost'
-                                size='icon'
-                                className={"text-muted-foreground hover:text-foreground"}
-                                onClick={handleRemoveImage}>
-                                <XIcon className='w-4 h-4' />
-                                <span className='sr-only'>Remove image</span>
-                            </Button>
-                        </div>
+                        )
                     )
                 }
             </div>
