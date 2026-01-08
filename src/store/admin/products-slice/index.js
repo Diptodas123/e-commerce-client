@@ -28,7 +28,7 @@ export const fetchAllProducts = createAsyncThunk("/products/fetchallproducts",
             const response = await axios.get("http://localhost:3000/api/admin/products", {
                 withCredentials: true
             });
-            
+
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Failed to fetch all products" });
@@ -82,11 +82,32 @@ const adminProductsSlice = createSlice({
             state.isLoading = true;
         }).addCase(fetchAllProducts.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.productList = action.payload.data;            
+            state.productList = action.payload.data;
         }).addCase(fetchAllProducts.rejected, (state) => {
             state.isLoading = false;
             state.productList = [];
         });
+        builder.addCase(editProduct.pending, (state) => {
+            state.isLoading = true;
+        }).addCase(editProduct.fulfilled, (state, action) => {
+            state.isLoading = false;
+            const updatedProduct = action.payload.data;
+            const index = state.productList.findIndex(product => product._id === updatedProduct._id);
+            if (index !== -1) {
+                state.productList[index] = updatedProduct;
+            }
+        }).addCase(editProduct.rejected, (state) => {
+            state.isLoading = false;
+        });
+        builder.addCase(deleteProduct.pending, (state) => {
+            state.isLoading = true;
+        }).addCase(deleteProduct.fulfilled, (state, action) => {
+            state.isLoading = false;
+            const deletedProductId = action.payload.data._id;
+            state.productList = state.productList.filter(product => product._id !== deletedProductId);
+        }).addCase(deleteProduct.rejected, (state) => {
+            state.isLoading = false;
+        })
     }
 });
 

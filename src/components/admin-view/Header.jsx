@@ -19,11 +19,11 @@ const AdminHeader = ({ setOpen }) => {
                     className="inline-flex gap-2 items-center rounded-md px-4 py-2 text-sm font-medium shadow"
                     onClick={() => dispatch(logoutUser())}
                 >
-                    <LogOut />
-                    Logout
-                </Button>
-            </div>
-        </header>
+                <LogOut />
+                Logout
+            </Button>
+        </div>
+        </header >
     )
 }
 
