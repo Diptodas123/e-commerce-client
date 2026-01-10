@@ -23,7 +23,7 @@ export const addNewProduct = createAsyncThunk("/products/addnewproduct",
 );
 
 export const fetchAllProducts = createAsyncThunk("/products/fetchallproducts",
-    async (formData, { rejectWithValue }) => {
+    async (_, { rejectWithValue }) => {
         try {
             const response = await axios.get("http://localhost:3000/api/admin/products", {
                 withCredentials: true

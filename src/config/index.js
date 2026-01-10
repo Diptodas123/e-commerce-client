@@ -108,3 +108,80 @@ export const addProductFormElements = [
         type: "number",
     }
 ];
+
+export const shoppingViewHeaderMenuItems = [
+    {
+        id: "home",
+        label: "Home",
+        to: "/shop/home"
+    },
+    {
+        id: "men",
+        label: "Men",
+        to: "/shop/listing"
+    },
+    {
+        id: "women",
+        label: "Women",
+        to: "/shop/listing"
+    },
+    {
+        id: "kids",
+        label: "Kids",
+        to: "/shop/listing"
+    },
+    {
+        id: "footwear",
+        label: "Footwear",
+        to: "/shop/listing"
+    },
+    {
+        id: 'accessories',
+        label: "Accessories",
+        to: "/shop/listing"
+    },
+];
+
+export const sortOptions = [
+    { id: "price-lowtohigh", label: "Price: Low to High" },
+    { id: "price-hightolow", label: "Price: High to Low" },
+    { id: "title-atoz", label: "Title: A to Z" },
+    { id: "title-ztoa", label: "Title: Z to A" }
+];
+
+export const filterOptions = {
+    category: [
+        { id: 'men', label: "Men" },
+        { id: 'women', label: "Women" },
+        { id: 'kids', label: "Kids" },
+        { id: 'accessories', label: "Accessories" },
+        { id: 'footwear', label: "Footwear" },
+    ],
+    brand: [
+        { id: 'nike', label: "Nike" },
+        { id: 'adidas', label: "Adidas" },
+        { id: 'puma', label: "Puma" },
+        { id: 'levi', label: "Levi's" },
+        { id: 'underarmour', label: "Under Armour" },
+        { id: 'newbalance', label: "New Balance" },
+        { id: 'h&m', label: "H&M" },
+    ],
+};
+
+export const categoryOptionsMap = {
+    men: "Men",
+    women: "Women",
+    kids: "Kids",
+    accessories: "Accessories",
+    footwear: "Footwear",
+}
+
+export const brandOptionsMap = {
+    nike: "Nike",
+    adidas: "Adidas",
+    puma: "Puma",
+    levi: "Levi's",
+    underarmour: "Under Armour",
+    newbalance: "New Balance",
+    "h&m": "H&M",
+}
