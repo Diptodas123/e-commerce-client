@@ -1,5 +1,5 @@
 import ProductFilter from '@/components/shopping-view/Filter';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,23 +11,89 @@ import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-react';
 import { sortOptions } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllFilteredProducts } from '@/store/shop/product-slice';
+import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/products-slice';
 import ShoppingProductTile from '@/components/shopping-view/ProductTile';
 import ProductsNotFound from '@/components/shopping-view/NotFound';
+import { useSearchParams } from 'react-router-dom';
+import { createSearchParamsHelper } from '@/utils/queryParams';
+import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
 
 const ShoppingListing = () => {
 
   const dispatch = useDispatch();
 
-  const { productList } = useSelector(state => state.shopProducts);
+  // Products from the store
+  const { productList, isLoading, productDetails } = useSelector(state => state.shopProducts);
+
+  // Product Details Dialog State
+  const [openProductDetailsDialog, setOpenProductDetailsDialog] = useState(false);
+
+  // Filter and Sort State
+  const [filters, setFilters] = useState(() => JSON.parse(sessionStorage.getItem('filters')) || {});
+
+  const [sort, setSort] = useState(sortOptions[0].id);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Handle Sort Change
+  const handleSortChange = (value) => setSort(value);
+
+  // Handle Filter Change
+  const handleFilterChange = (getSectionId, getCurrentOption) => {
+
+    // Create a copy of the current filters state
+    let copyFilters = { ...filters };
+    const indexOfCurrentSection = Object.keys(copyFilters).indexOf(getSectionId);
+
+    // If section does not exist, create it else update the existing section
+    if (indexOfCurrentSection === -1) {
+      copyFilters = {
+        ...copyFilters,
+        [getSectionId]: [getCurrentOption]
+      }
+    } else {
+      const indexOfCurrentOption = copyFilters[getSectionId].indexOf(getCurrentOption);
+      if (indexOfCurrentOption === -1) {
+        copyFilters[getSectionId].push(getCurrentOption);
+      } else {  // Remove the option that is already selected(toggle)
+        copyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+        if (copyFilters[getSectionId].length === 0) {
+          delete copyFilters[getSectionId];
+        }
+      }
+    }
+
+    setFilters(copyFilters);
+    // Persist filters to session storage so that it remains on page reload
+    sessionStorage.setItem('filters', JSON.stringify(copyFilters));
+  };
+
+  // Handle Get Product Details for a product
+  const handleGetProductDetails = (productId) => {
+    dispatch(fetchProductDetails(productId));
+  }
+
+  // Fetch Products on filters change
+  useEffect(() => {
+    dispatch(fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }));
+  }, [dispatch, filters, sort]);
+
+  // Update URL search params on filters change
+  useEffect(() => {
+    if (Object.keys(filters).length > 0) {
+      const params = createSearchParamsHelper(filters);
+      setSearchParams(new URLSearchParams(params));
+    }
+  }, [filters, setSearchParams]);
 
   useEffect(() => {
-    dispatch(fetchAllFilteredProducts());
-  }, [dispatch]);
+    if (productDetails) {
+      setOpenProductDetailsDialog(true);
+    }
+  }, [productDetails]);
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-4 md:p-6'>
-      <ProductFilter />
+    <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>
+      <ProductFilter filters={filters} handleFilterChange={handleFilterChange} />
       <div className='bg-background w-full rounded-lg shadow-sm'>
         <div className='p-4 border-b flex items-center justify-between'>
           <h2 className='text-lg font-extrabold'>All Products</h2>
@@ -44,12 +110,12 @@ const ShoppingListing = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className={"w-50"}>
-              <DropdownMenuRadioGroup>
+              <DropdownMenuRadioGroup value={sort} onValueChange={handleSortChange}>
                 {
                   sortOptions.map((option) => (
                     <DropdownMenuRadioItem
-                      key={option.value}
-                      value={option.value}
+                      key={option.id}
+                      value={option.id}
                       className={"cursor-pointer"}
                     >
                       {option.label}
@@ -61,17 +127,34 @@ const ShoppingListing = () => {
           </DropdownMenu>
         </div>
         {
-          productList?.length > 0 ?
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 p-4'>
-              {
-                productList.map(product => <ShoppingProductTile key={product?._id} product={product} />)
-              }
-            </div> :
-            <div>
-              <ProductsNotFound />
+          isLoading ? (
+            <div className='flex flex-col items-center justify-center min-h-100 gap-4'>
+              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary'></div>
+              <p className='text-lg text-muted-foreground'>Loading products...</p>
+              <p className='text-sm text-muted-foreground'>Please wait while we fetch the latest items</p>
             </div>
+          ) :
+            productList?.length > 0 ?
+              <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4'>
+                {
+                  productList.map(product =>
+                    <ShoppingProductTile
+                      key={product?._id}
+                      product={product}
+                      handleGetProductDetails={handleGetProductDetails}
+                    />)
+                }
+              </div> :
+              <div>
+                <ProductsNotFound />
+              </div>
         }
       </div>
+      <ProductDetailsDialog
+        open={openProductDetailsDialog}
+        setOpen={setOpenProductDetailsDialog}
+        productDetails={productDetails}
+      />
     </div>
   )
 }

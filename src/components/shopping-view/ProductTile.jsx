@@ -5,12 +5,15 @@ import { renderPrice } from '@/utils/renderPrice';
 import { Button } from '@/components/ui/button';
 import { brandOptionsMap, categoryOptionsMap } from '@/config';
 
-const ShoppingProductTile = ({ product }) => {
+const ShoppingProductTile = ({ product, handleGetProductDetails }) => {
 
     const isSalePriceAvailable = product.salePrice > 0;
 
     return (
-        <Card className="w-full max-w-sm mx-auto pt-0 shadow-sm">
+        <Card
+            onClick={() => handleGetProductDetails(product._id)}
+            className="w-full max-w-sm mx-auto pt-0 shadow-sm cursor-pointer hover:shadow-xl hover:scale-103 transition-all duration-300"
+        >
             <div>
                 <div className='relative'>
                     <img
