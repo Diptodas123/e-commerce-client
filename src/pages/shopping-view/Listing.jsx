@@ -17,6 +17,8 @@ import ProductsNotFound from '@/components/shopping-view/NotFound';
 import { useSearchParams } from 'react-router-dom';
 import { createSearchParamsHelper } from '@/utils/queryParams';
 import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
+import { addToCart } from '@/store/shop/cart-slice';
+import { toast } from 'sonner';
 
 const ShoppingListing = () => {
 
@@ -24,6 +26,9 @@ const ShoppingListing = () => {
 
   // Products from the store
   const { productList, isLoading, productDetails } = useSelector(state => state.shopProducts);
+
+  // User info from the store
+  const { user } = useSelector(state => state.auth);
 
   // Product Details Dialog State
   const [openProductDetailsDialog, setOpenProductDetailsDialog] = useState(false);
@@ -70,6 +75,24 @@ const ShoppingListing = () => {
   // Handle Get Product Details for a product
   const handleGetProductDetails = (productId) => {
     dispatch(fetchProductDetails(productId));
+  }
+
+  // Handle Add to Cart for a product
+  const handleAddToCart = (e, productId) => {    
+    e.stopPropagation();
+    dispatch(addToCart({ productId, userId: user.id, quantity: 1 })).then(data => {
+      if (data.payload?.status === "success") {
+        toast.success(data.payload?.message || "Product added to cart", {
+          duration: 3000,
+          position: 'top-right'
+        });
+      } else {
+        toast.error(data.payload?.message || "Failed to add product to cart", {
+          duration: 5000,
+          position: 'top-right'
+        });
+      }
+    });
   }
 
   // Fetch Products on filters change
@@ -142,6 +165,7 @@ const ShoppingListing = () => {
                       key={product?._id}
                       product={product}
                       handleGetProductDetails={handleGetProductDetails}
+                      handleAddToCart={handleAddToCart}
                     />)
                 }
               </div> :
@@ -154,6 +178,7 @@ const ShoppingListing = () => {
         open={openProductDetailsDialog}
         setOpen={setOpenProductDetailsDialog}
         productDetails={productDetails}
+        handleAddToCart={handleAddToCart}
       />
     </div>
   )

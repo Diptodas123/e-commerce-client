@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import AuthLayout from './components/auth/layout'
 import AuthLogin from './pages/auth/Login'
@@ -48,6 +48,10 @@ function App() {
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
       <Routes>
+
+        {/* Redirect root to shopping home */}
+        <Route path="/" element={<Navigate to="/shop/home" replace />} />
+
         <Route path="/auth" element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
             <AuthLayout />
@@ -75,7 +79,11 @@ function App() {
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
         </Route>
+
+        {/* Unauthorized access page */}
         <Route path="/unauth-page" element={<UnauthorizedPage />} />
+
+        {/* Catch-all route for undefined paths */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

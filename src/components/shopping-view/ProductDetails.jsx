@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { StarIcon } from 'lucide-react';
 import { Input } from '../ui/input';
 
-const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
+const ProductDetailsDialog = ({ open, setOpen, productDetails, handleAddToCart }) => {
     if (!productDetails) return null;
 
     return (
@@ -54,7 +54,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                             }
                         </div>
                         <div className='mt-5'>
-                            <Button className={"w-full"}>Add to Cart</Button>
+                            <Button onClick={(e)=> handleAddToCart(e, productDetails?._id)} className={"w-full"}>Add to Cart</Button>
                         </div>
                         <Separator />
                     </div>

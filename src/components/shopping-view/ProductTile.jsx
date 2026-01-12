@@ -5,7 +5,7 @@ import { renderPrice } from '@/utils/renderPrice';
 import { Button } from '@/components/ui/button';
 import { brandOptionsMap, categoryOptionsMap } from '@/config';
 
-const ShoppingProductTile = ({ product, handleGetProductDetails }) => {
+const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddToCart }) => {
 
     const isSalePriceAvailable = product.salePrice > 0;
 
@@ -45,12 +45,13 @@ const ShoppingProductTile = ({ product, handleGetProductDetails }) => {
                             isSalePriceAvailable && (
                                 <span className='text-lg font-semibold text-primary'>
                                     {renderPrice(product.salePrice)}
-                                </span>)
+                                </span>
+                            )
                         }
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button className={"w-full"}>
+                    <Button className={"w-full"} onClick={(e) => { handleAddToCart(e, product._id) }}>
                         Add to cart
                     </Button>
                 </CardFooter>
