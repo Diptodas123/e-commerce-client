@@ -37,6 +37,8 @@ const ShoppingListing = () => {
   const [filters, setFilters] = useState(() => JSON.parse(sessionStorage.getItem('filters')) || {});
 
   const [sort, setSort] = useState(sortOptions[0].id);
+
+  // eslint-disable-next-line
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Handle Sort Change
@@ -75,6 +77,7 @@ const ShoppingListing = () => {
   // Handle Get Product Details for a product
   const handleGetProductDetails = (productId) => {
     dispatch(fetchProductDetails(productId));
+    setOpenProductDetailsDialog(true);
   }
 
   // Handle Add to Cart for a product
@@ -107,12 +110,6 @@ const ShoppingListing = () => {
       setSearchParams(new URLSearchParams(params));
     }
   }, [filters, setSearchParams]);
-
-  useEffect(() => {
-    if (productDetails) {
-      setOpenProductDetailsDialog(true);
-    }
-  }, [productDetails]);
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>

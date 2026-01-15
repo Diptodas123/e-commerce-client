@@ -1,17 +1,27 @@
 import React from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { renderPrice } from '@/utils/renderPrice';
-import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { StarIcon } from 'lucide-react';
-import { Input } from '../ui/input';
+import { Input } from '@/components/ui/input';
+import { useDispatch } from 'react-redux';
+import { setProductDetails } from '@/store/shop/products-slice';
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails, handleAddToCart }) => {
+
+    const dispath = useDispatch();
+
+    const handleDialogClose = () => {
+        setOpen(false);
+        dispath(setProductDetails());
+    }
+
     if (!productDetails) return null;
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleDialogClose}>
             <DialogContent className={"grid grid-cols-1 md:grid-cols-2 gap-0 p-2 max-w-[95vw] sm:max-w-3xl lg:max-w-4xl h-[85vh] overflow-hidden"}>
                 <div className='relative overflow-hidden h-64 md:h-full rounded-l-lg'>
                     <img
@@ -54,7 +64,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, handleAddToCart }
                             }
                         </div>
                         <div className='mt-5'>
-                            <Button onClick={(e)=> handleAddToCart(e, productDetails?._id)} className={"w-full"}>Add to Cart</Button>
+                            <Button onClick={(e) => handleAddToCart(e, productDetails?._id)} className={"w-full"}>Add to Cart</Button>
                         </div>
                         <Separator />
                     </div>
