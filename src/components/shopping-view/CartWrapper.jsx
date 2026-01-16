@@ -1,4 +1,3 @@
-import React from 'react'
 import { SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '../ui/button';
 import CartItemContent from './CartItemContent.jsx';

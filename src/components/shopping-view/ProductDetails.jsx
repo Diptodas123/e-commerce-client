@@ -1,4 +1,3 @@
-import React from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { renderPrice } from '@/utils/renderPrice';
 import { Button } from '@/components/ui/button';

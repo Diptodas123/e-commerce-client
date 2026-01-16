@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChartNoAxesCombined, LayoutDashboard, ShoppingBasket, TicketCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
