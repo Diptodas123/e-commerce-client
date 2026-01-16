@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/products-slice';
 import ShoppingProductTile from '@/components/shopping-view/ProductTile';
 import ProductsNotFound from '@/components/shopping-view/NotFound';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { createSearchParamsHelper } from '@/utils/queryParams';
 import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
 import { addToCart } from '@/store/shop/cart-slice';
@@ -32,6 +32,8 @@ const ShoppingListing = () => {
 
   // Product Details Dialog State
   const [openProductDetailsDialog, setOpenProductDetailsDialog] = useState(false);
+
+  const location = useLocation();
 
   // Filter and Sort State
   const [filters, setFilters] = useState(() => JSON.parse(sessionStorage.getItem('filters')) || {});
@@ -98,18 +100,29 @@ const ShoppingListing = () => {
     });
   }
 
+  // Load filters from sessionStorage when navigating (location.key changes)
+  useEffect(() => {
+    const storedFilters = JSON.parse(sessionStorage.getItem('filters')) || {};
+    // Only update if different to avoid unnecessary re-renders
+    if (JSON.stringify(storedFilters) !== JSON.stringify(filters)) {
+      setFilters(storedFilters);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key]);
+
   // Fetch Products on filters change
   useEffect(() => {
     dispatch(fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }));
   }, [dispatch, filters, sort]);
 
-  // Update URL search params on filters change
+  // Update URL search params on filter changes
   useEffect(() => {
     if (Object.keys(filters).length > 0) {
       const params = createSearchParamsHelper(filters);
       setSearchParams(new URLSearchParams(params));
     }
-  }, [filters, setSearchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6'>

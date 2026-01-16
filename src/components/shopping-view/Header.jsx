@@ -14,19 +14,44 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ShoppingCart } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { logoutUser } from '@/store/auth-slice';
 import CartWrapper from './CartWrapper';
 import { useEffect, useState } from 'react';
 import { fetchCartItems } from '@/store/shop/cart-slice';
+import { Label } from '@/components/ui/label';
 
 function MenuItems() {
+
+    const navigate = useNavigate();
+
+    const handleNavigate = (clickedMenuItem) => {
+        sessionStorage.removeItem('filters');
+
+        const isHomeMenuItem = clickedMenuItem === 'home';
+        if (isHomeMenuItem) {
+            return navigate('/shop/home');
+        }
+
+        const currentFilter = {
+            category: [clickedMenuItem]
+        };
+
+        sessionStorage.setItem('filters', JSON.stringify(currentFilter));
+        navigate('/shop/listing');
+    }
+
     return (
         <nav className='flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row'>
             {
                 shoppingViewHeaderMenuItems.map(menuItem =>
-                    <Link key={menuItem.id} to={menuItem.to} className='text-sm font-medium'>
+                    <Label
+                        onClick={() => handleNavigate(menuItem.id)}
+                        key={menuItem.id}
+                        className='text-sm font-medium cursor-pointer'
+                    >
                         {menuItem.label}
-                    </Link>
+                    </Label>
                 )
             }
         </nav>
@@ -45,13 +70,20 @@ function HeaderRightContent() {
     // Fetch user cart items on component mount
     useEffect(() => {
         dispatch(fetchCartItems(user.id))
-    }, [dispatch]);
+    }, [dispatch, user.id]);
+
+    const cartCount = cartItems.length ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
 
     return (
         <div className='flex lg:items-center lg:flex-row flex-col gap-4'>
             <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-                <Button variant='outline' size='icon' onClick={() => setOpenCartSheet(true)}>
+                <Button variant='outline' size='icon' className='relative' onClick={() => setOpenCartSheet(true)}>
                     <ShoppingCart className='h-6 w-6' />
+                    {cartCount > 0 && (
+                        <Badge className='absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs'>
+                            {cartCount}
+                        </Badge>
+                    )}
                     <span className='sr-only'>View cart</span>
                 </Button>
                 <CartWrapper cartItems={cartItems} />

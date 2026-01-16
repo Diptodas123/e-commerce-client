@@ -20,8 +20,12 @@ import hnm from '@/assets/brands/hnm.png';
 import { Card, CardContent } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllFilteredProducts } from '@/store/shop/products-slice';
+import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/products-slice';
 import ShoppingProductTile from '@/components/shopping-view/ProductTile';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { addToCart } from '@/store/shop/cart-slice';
+import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
 
 const categoriesWithIcon = [
   { id: 'men', label: "Men", icon: Mars },
@@ -48,9 +52,52 @@ const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Redux state for products
-  const { productList } = useSelector(state => state.shopProducts);
+  const { productList, productDetails } = useSelector(state => state.shopProducts);
+
+  // User info from the store
+  const { user } = useSelector(state => state.auth);
+
+  // Product Details Dialog State
+  const [openProductDetailsDialog, setOpenProductDetailsDialog] = useState(false);
+
+  // Navigate to listing page with filters
+  const handleNavigateToListingPageWithFilters = (getCurrentItem, section) => {
+    sessionStorage.removeItem('filters');
+    const currentFilter = {
+      [section]: [getCurrentItem]
+    }
+
+    sessionStorage.setItem('filters', JSON.stringify(currentFilter));
+    navigate('/shop/listing');
+  }
+
+  // Handle Get Product Details for a product
+  const handleGetProductDetails = (productId) => {
+    dispatch(fetchProductDetails(productId));
+    setOpenProductDetailsDialog(true);
+  }
+
+  // Handle Add to Cart for a product
+  const handleAddToCart = (e, productId) => {
+    e.stopPropagation();
+    dispatch(addToCart({ productId, userId: user.id, quantity: 1 })).then(data => {
+      if (data.payload?.status === "success") {
+        toast.success(data.payload?.message || "Product added to cart", {
+          duration: 3000,
+          position: 'top-right'
+        });
+      } else {
+        toast.error(data.payload?.message || "Failed to add product to cart", {
+          duration: 5000,
+          position: 'top-right'
+        });
+      }
+    });
+  }
+
 
   // Auto slide effect
   useEffect(() => {
@@ -103,7 +150,11 @@ const ShoppingHome = () => {
           </h2>
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'>
             {categoriesWithIcon.map(categoryItem => (
-              <Card key={categoryItem.id} className={"cursor-pointer hover:shadow-lg transition-shadow"}>
+              <Card
+                onClick={() => handleNavigateToListingPageWithFilters(categoryItem.id, 'category')}
+                key={categoryItem.id}
+                className={"cursor-pointer hover:shadow-lg transition-shadow"}
+              >
                 <CardContent className={"flex flex-col items-center justify-center p-6"}>
                   <categoryItem.icon className='w-12 h-12 mb-4 text-primary' />
                   <span className='font-bold'>{categoryItem.label}</span>
@@ -123,7 +174,12 @@ const ShoppingHome = () => {
               <p className='text-center col-span-full'>No products available.</p>
             ) : (
               productList.slice(0, 4).map(productItem => (
-                <ShoppingProductTile key={productItem?._id} product={productItem} />
+                <ShoppingProductTile
+                  handleGetProductDetails={handleGetProductDetails}
+                  key={productItem?._id}
+                  product={productItem}
+                  handleAddToCart={handleAddToCart}
+                />
               ))
             )}
           </div>
@@ -137,7 +193,11 @@ const ShoppingHome = () => {
           </h2>
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4'>
             {brands.map(brandItem => (
-              <Card key={brandItem.id} className={"cursor-pointer hover:shadow-lg transition-shadow"}>
+              <Card
+                key={brandItem.id}
+                className={"cursor-pointer hover:shadow-lg transition-shadow"}
+                onClick={() => handleNavigateToListingPageWithFilters(brandItem.id, 'brand')}
+              >
                 <CardContent className={"flex flex-col items-center justify-center p-6"}>
                   <img src={brandItem.logo} alt={brandItem.label} className='w-20 h-20 mb-4 object-contain' />
                   <span className='font-bold'>{brandItem.label}</span>
@@ -146,8 +206,14 @@ const ShoppingHome = () => {
             ))}
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+      <ProductDetailsDialog
+        open={openProductDetailsDialog}
+        setOpen={setOpenProductDetailsDialog}
+        productDetails={productDetails}
+        handleAddToCart={handleAddToCart}
+      />
+    </div >
   )
 }
 
