@@ -4,10 +4,12 @@ import CartItemContent from './CartItemContent.jsx';
 import { renderPrice } from '@/utils/renderPrice';
 import { ShoppingCart } from 'lucide-react';
 import { getCartTotal } from '@/utils/cartUtils';
+import { useNavigate } from 'react-router-dom';
 
 const CartWrapper = ({ cartItems }) => {
 
     const totalAmount = getCartTotal(cartItems);
+    const navigate = useNavigate();
 
     return (
         <SheetContent side='right' className='w-full sm:max-w-md p-6 flex flex-col'>
@@ -38,9 +40,17 @@ const CartWrapper = ({ cartItems }) => {
                         <div className='pt-6 border-t space-y-3 mt-15'>
                             <div className='flex justify-between items-center'>
                                 <span className='text-lg font-bold'>Total</span>
-                                <span className='text-lg font-bold'>{renderPrice(totalAmount)}</span>
+                                <span className='text-lg font-bold'>
+                                    {renderPrice(totalAmount)}
+                                </span>
                             </div>
-                            <Button className={"w-full"} size="lg">Checkout</Button>
+                            <Button
+                                onClick={() => navigate('/shop/checkout')}
+                                className={"w-full"}
+                                size="lg"
+                            >
+                                Checkout
+                            </Button>
                         </div>
                     </>
                 )

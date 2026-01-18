@@ -179,3 +179,47 @@ export const brandOptionsMap = {
     newbalance: "New Balance",
     "h&m": "H&M",
 }
+
+export const addressFormControls = [
+    {
+        label: "Address",
+        name: "address",
+        componentType: "input",
+        type: "text",
+        placeholder: "Enter your address",
+    },
+    {
+        label: "City",
+        name: "city",
+        componentType: "input",
+        type: "text",
+        placeholder: "Enter your city",
+    },
+    {
+        label: "Postal Code",
+        name: "postalCode",
+        componentType: "input",
+        type: "text",
+        placeholder: "Enter your postal code",
+    },
+    {
+        label: "Country",
+        name: "country",
+        componentType: "input",
+        type: "text",
+        placeholder: "Enter your country",
+    },
+    {
+        label: "Phone",
+        name: "phone",
+        componentType: "input",
+        type: "text",
+        placeholder: "Enter your phone number",
+    },
+    {
+        label: "Notes(optional)",
+        name: "notes",
+        componentType: "textarea",
+        placeholder: "Enter any additional notes",
+    }
+];
