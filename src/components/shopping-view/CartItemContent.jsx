@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { removeFromCart, updateCartItemQuantity } from '@/store/shop/cart-slice';
-import { renderPrice } from '@/utils/renderPrice';
+import { renderPrice } from '@/utils/convertToLocale';
 import { getItemTotal } from '@/utils/cartUtils';
 import { Minus, Plus, Trash } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';

@@ -72,7 +72,8 @@ function HeaderRightContent() {
         dispatch(fetchCartItems(user.id))
     }, [dispatch, user.id]);
 
-    const cartCount = cartItems.length ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+    const items = cartItems?.items || [];
+    const cartCount = items.length ? items.reduce((total, item) => total + item.quantity, 0) : 0;
 
     return (
         <div className='flex lg:items-center lg:flex-row flex-col gap-4'>
@@ -86,7 +87,10 @@ function HeaderRightContent() {
                     )}
                     <span className='sr-only'>View cart</span>
                 </Button>
-                <CartWrapper cartItems={cartItems} />
+                <CartWrapper
+                    cartItems={items}
+                    setOpenCartSheet={setOpenCartSheet}
+                />
             </Sheet>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>

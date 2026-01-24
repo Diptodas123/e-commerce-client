@@ -223,3 +223,18 @@ export const addressFormControls = [
         placeholder: "Enter any additional notes",
     }
 ];
+
+export const orderStatusOptions = [
+    {
+        name: "status",
+        label: "Order Status",
+        options: [
+            { id: 'pending', label: "Pending" },
+            { id: 'confirmed', label: "Confirmed" },
+            { id: 'shipped', label: "Shipped" },
+            { id: 'delivered', label: "Delivered" },
+            { id: 'cancelled', label: "Cancelled" },
+        ],
+        componentType: "select",
+    }
+];

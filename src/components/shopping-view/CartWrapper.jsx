@@ -1,12 +1,12 @@
 import { SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '../ui/button';
 import CartItemContent from './CartItemContent.jsx';
-import { renderPrice } from '@/utils/renderPrice';
+import { renderPrice } from '@/utils/convertToLocale';
 import { ShoppingCart } from 'lucide-react';
 import { getCartTotal } from '@/utils/cartUtils';
 import { useNavigate } from 'react-router-dom';
 
-const CartWrapper = ({ cartItems }) => {
+const CartWrapper = ({ cartItems, setOpenCartSheet }) => {
 
     const totalAmount = getCartTotal(cartItems);
     const navigate = useNavigate();
@@ -45,7 +45,10 @@ const CartWrapper = ({ cartItems }) => {
                                 </span>
                             </div>
                             <Button
-                                onClick={() => navigate('/shop/checkout')}
+                                onClick={() => {
+                                    setOpenCartSheet(false);
+                                    navigate('/shop/checkout');
+                                }}
                                 className={"w-full"}
                                 size="lg"
                             >

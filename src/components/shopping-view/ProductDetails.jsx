@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { renderPrice } from '@/utils/renderPrice';
+import { renderPrice } from '@/utils/convertToLocale';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';

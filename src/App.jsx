@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { checkAuth } from '@/store/auth-slice'
 import { Spinner } from "@/components/ui/spinner";
+import PaymentSuccess from './pages/shopping-view/PaymentSuccess'
+import PaymentCancel from './pages/shopping-view/PaymentCancel'
 
 function App() {
 
@@ -78,6 +80,8 @@ function App() {
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
+          <Route path="payment-success" element={<PaymentSuccess />} />
+          <Route path="payment-cancel" element={<PaymentCancel />} />
         </Route>
 
         {/* Unauthorized access page */}

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { renderPrice } from '@/utils/renderPrice';
+import { renderPrice } from '@/utils/convertToLocale';
 import { Button } from '../ui/button';
 import { Edit, Trash } from 'lucide-react';
 

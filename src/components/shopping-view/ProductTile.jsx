@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { renderPrice } from '@/utils/renderPrice';
+import { renderPrice } from '@/utils/convertToLocale';
 import { Button } from '@/components/ui/button';
 import { brandOptionsMap, categoryOptionsMap } from '@/config';
 

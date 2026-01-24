@@ -5,3 +5,7 @@ export const renderPrice = (price) => {
         minimumFractionDigits: 2,
     });
 };
+
+export const renderDate = (date) => {    
+    return new Date(date).toLocaleDateString()
+};

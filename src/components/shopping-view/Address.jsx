@@ -12,7 +12,7 @@ const initialFormData = addressFormControls.reduce((acc, control) => {
   return acc;
 }, {});
 
-const Address = () => {
+const Address = ({ setCurrentSelectedAddress }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [currentEditAddressId, setCurrentEditAddressId] = useState(null);
@@ -32,7 +32,7 @@ const Address = () => {
       setFormData(initialFormData);
       return;
     }
-    
+
     dispatch(addAddress({ userId: user?.id, formData })).then(data => {
       if (data.payload?.status === "success") {
         setFormData(initialFormData);
@@ -128,7 +128,7 @@ const Address = () => {
 
   return (
     <Card>
-      <div className="mb-3 p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+      <div className="mb-3 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
         {
           addressList.length > 0 ?
             addressList.map(address => (
@@ -137,6 +137,7 @@ const Address = () => {
                 addressInfo={address}
                 handleOnDeleteAddress={handleOnDeleteAddress}
                 handleOnEditAddress={handleOnEditAddress}
+                setCurrentSelectedAddress={setCurrentSelectedAddress}
               />
             )) : (
               <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">

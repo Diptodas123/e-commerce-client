@@ -1,6 +1,6 @@
-import accountImage from '@/assets/images/account-image.avif';
+import accountImage from '@/assets/banners/banner4.jpeg';
 import Address from '@/components/shopping-view/Address';
-import Orders from '@/components/shopping-view/Orders';
+import ShoppingOrders from '@/components/shopping-view/Orders';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const ShoppingAccount = () => {
@@ -23,7 +23,7 @@ const ShoppingAccount = () => {
               <TabsTrigger value="address">Address</TabsTrigger>
             </TabsList>
             <TabsContent value="orders">
-              <Orders />
+              <ShoppingOrders />
             </TabsContent>
             <TabsContent value="address">
               <Address />

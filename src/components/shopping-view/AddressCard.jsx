@@ -6,10 +6,14 @@ import { EditIcon, Trash2Icon } from "lucide-react";
 const AddressCard = ({
   addressInfo,
   handleOnEditAddress,
-  handleOnDeleteAddress
-}) => {  
+  handleOnDeleteAddress,
+  setCurrentSelectedAddress
+}) => {
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <Card
+      className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+      onClick={() => setCurrentSelectedAddress ? setCurrentSelectedAddress(addressInfo) : null}
+    >
       <CardContent className={"grid gap-4 p-4"}>
         <Label>Address: {addressInfo?.address}</Label>
         <Label>City: {addressInfo?.city}</Label>
