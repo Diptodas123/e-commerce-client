@@ -16,9 +16,9 @@ import { useNavigate } from 'react-router-dom';
 const ShoppingCheckout = () => {
 
   const { cartItems } = useSelector(state => state.cart);
-  const { approvalURL } = useSelector(state => state.order);
+  const { approvalURL } = useSelector(state => state.shopOrder);
   const totalAmount = getCartTotal(cartItems?.items);
-  const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
+  const { currentSelectedAddress } = useSelector(state => state.address);
   const [isPaymentStarted, setIsPaymentStarted] = useState(false);
 
   const dispatch = useDispatch();
@@ -102,7 +102,7 @@ const ShoppingCheckout = () => {
       <div className='container mx-auto px-4 py-8'>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           <div className='lg:col-span-2'>
-            <Address setCurrentSelectedAddress={setCurrentSelectedAddress} />
+            <Address />
           </div>
 
           <div className='lg:col-span-1'>

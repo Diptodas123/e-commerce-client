@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import ShoppingOrderDetails from "./OrderDetails";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ import { Badge } from "../ui/badge";
 const ShoppingOrders = () => {
   const [openOrderDetailsDialog, setOpenOrderDetailsDialog] = useState(false);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
-  const { orderList } = useSelector(state => state.order);
+  const { orderList } = useSelector(state => state.shopOrder);
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 

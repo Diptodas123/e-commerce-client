@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import { Badge } from "../ui/badge";
 
 const ShoppingOrderDetails = () => {
-    const { orderDetails, isLoading } = useSelector(state => state.order);
+    const { orderDetails, isLoading } = useSelector(state => state.shopOrder);
     const { user } = useSelector(state => state.auth);
 
     if (isLoading) {
@@ -61,7 +61,7 @@ const ShoppingOrderDetails = () => {
                         <Label>{renderPrice(orderDetails.paymentMethod)}</Label>
                     </div>
                     <div className="flex items-center justify-between mt-2">
-                        <p className="font-medium">Paypent Status</p>
+                        <p className="font-medium">Payment Status</p>
                         <Label>{renderPrice(orderDetails.paymentStatus)}</Label>
                     </div>
                 </div>

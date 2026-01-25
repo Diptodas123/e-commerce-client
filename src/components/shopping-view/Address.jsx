@@ -3,7 +3,7 @@ import CommonForm from "@/components/common/Form";
 import { addressFormControls } from "@/config";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addAddress, deleteAddress, editAddress, fetchAllAddresses } from "@/store/shop/address-slice";
+import { addAddress, deleteAddress, editAddress, fetchAllAddresses, setCurrentSelectedAddress } from "@/store/shop/address-slice";
 import { toast } from "sonner";
 import AddressCard from "./AddressCard";
 
@@ -12,14 +12,18 @@ const initialFormData = addressFormControls.reduce((acc, control) => {
   return acc;
 }, {});
 
-const Address = ({ setCurrentSelectedAddress }) => {
+const Address = () => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [currentEditAddressId, setCurrentEditAddressId] = useState(null);
 
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth);
-  const { addressList } = useSelector(state => state.address);
+  const { addressList, currentSelectedAddress } = useSelector(state => state.address);
+
+  const handleChangeSelectedAddress = (address) => {
+    dispatch(setCurrentSelectedAddress(address));
+  }
 
   const onAddAddress = (e) => {
     e.preventDefault();
@@ -137,7 +141,8 @@ const Address = ({ setCurrentSelectedAddress }) => {
                 addressInfo={address}
                 handleOnDeleteAddress={handleOnDeleteAddress}
                 handleOnEditAddress={handleOnEditAddress}
-                setCurrentSelectedAddress={setCurrentSelectedAddress}
+                isSelected={currentSelectedAddress?._id === address?._id}
+                handleChangeSelectedAddress={handleChangeSelectedAddress}
               />
             )) : (
               <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">

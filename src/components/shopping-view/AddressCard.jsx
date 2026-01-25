@@ -1,20 +1,31 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { EditIcon, Trash2Icon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { EditIcon, Trash2Icon, CheckCircle2 } from "lucide-react";
 
 const AddressCard = ({
   addressInfo,
   handleOnEditAddress,
   handleOnDeleteAddress,
-  setCurrentSelectedAddress
+  isSelected,
+  handleChangeSelectedAddress
 }) => {
+
   return (
     <Card
-      className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-      onClick={() => setCurrentSelectedAddress ? setCurrentSelectedAddress(addressInfo) : null}
+      className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer relative ${
+        isSelected ? 'ring-2 ring-primary border-primary shadow-md' : ''
+      }`}
+      onClick={() => handleChangeSelectedAddress(addressInfo)}
     >
-      <CardContent className={"grid gap-4 p-4"}>
+      {isSelected && (
+        <Badge className="absolute top-2 right-2 bg-primary flex items-center gap-1">
+          <CheckCircle2 className="h-3 w-3" />
+          Selected
+        </Badge>
+      )}
+      <CardContent className={"grid gap-4 p-4 pt-6"}>
         <Label>Address: {addressInfo?.address}</Label>
         <Label>City: {addressInfo?.city}</Label>
         <Label>Postal Code: {addressInfo?.postalCode}</Label>
