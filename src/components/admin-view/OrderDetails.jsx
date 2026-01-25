@@ -3,24 +3,48 @@ import { Label } from "@/components/ui/label";
 import { renderDate, renderPrice } from "@/utils/convertToLocale";
 import { Separator } from "@/components/ui/separator";
 import CommonForm from "@/components/common/Form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { orderStatusOptions } from "@/config";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { updateOrderStatus } from "@/store/admin/order-slice";
+import { toast } from "sonner";
 
-const initialFormData = {
-    status: orderStatusOptions[0].options[0].id
-};
+const AdminOrderDetailsView = ({ onClose }) => {
 
-const AdminOrderDetailsView = () => {
+    const { orderDetails, isLoading } = useSelector(state => state.adminOrder);
+    const dispatch = useDispatch();
 
-    const { orderDetails, isLoading } = useSelector(state => state.adminOrder);    
-    const [formData, setFormData] = useState(initialFormData);
+    const [formData, setFormData] = useState({
+        status: orderDetails?.orderStatus || orderStatusOptions[0].options[0].id
+    });
 
     const handleUpdateOrderStatus = (e) => {
         e.preventDefault();
+        dispatch(updateOrderStatus({
+            id: orderDetails._id,
+            status: formData.status
+        })).then((data) => {
+            if (data?.payload?.status === 'success') {
+                toast.success(data.payload?.message || "Order status updated successfully", {
+                    position: "top-right",
+                });
+                onClose();
+            } else {
+                toast.error(data.payload?.message || "Error updating order status", {
+                    position: "top-right",
+                });
+            }
+        });
     }
+
+    useEffect(() => {
+        if (orderDetails?.orderStatus) {
+            // eslint-disable-next-line
+            setFormData({ status: orderDetails.orderStatus });
+        }
+    }, [orderDetails?.orderStatus]);
 
     if (isLoading) {
         return (
@@ -61,7 +85,7 @@ const AdminOrderDetailsView = () => {
                     </div>
                     <div className="flex items-center justify-between mt-2">
                         <p className="font-medium">Status</p>
-                        <Badge className={`${orderDetails.orderStatus === "confirmed" ? "bg-green-500" : "bg-black"}`}>
+                        <Badge className={`${orderDetails.orderStatus === "confirmed" ? "bg-green-500" : orderDetails.orderStatus === "cancelled" ? "bg-red-500" : "bg-black"}`}>
                             {orderDetails.orderStatus}
                         </Badge>
                     </div>

@@ -48,7 +48,7 @@ const ShoppingOrderDetails = () => {
                     </div>
                     <div className="flex items-center justify-between mt-2">
                         <p className="font-medium">Status</p>
-                        <Badge className={`${orderDetails.orderStatus === "confirmed" ? "bg-green-500" : "bg-black"}`}>
+                        <Badge className={`${orderDetails.orderStatus === "confirmed" ? "bg-green-500" : orderDetails.orderStatus === "cancelled" ? "bg-red-500" : "bg-black"}`}>
                             {orderDetails.orderStatus}
                         </Badge>
                     </div>

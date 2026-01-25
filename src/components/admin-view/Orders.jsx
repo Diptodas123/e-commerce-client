@@ -81,7 +81,7 @@ const AdminOrdersView = () => {
                     <TableCell>{renderDate(order.createdAt)}</TableCell>
                     <TableCell>
                       <Badge
-                        className={`${order.orderStatus === "confirmed" ? "bg-green-500" : "bg-black"} py-1 px-3`}
+                        className={`${order.orderStatus === "confirmed" ? "bg-green-500" : order.orderStatus === "cancelled" ? "bg-red-500" : "bg-black"}`}
                       >
                         {order.orderStatus}
                       </Badge>
@@ -105,7 +105,7 @@ const AdminOrdersView = () => {
                 }
               }}
             >
-              <AdminOrderDetailsView />
+              <AdminOrderDetailsView onClose={() => setOpenOrderDetailsDialog(false)} />
             </Dialog>
           </>
         )}
