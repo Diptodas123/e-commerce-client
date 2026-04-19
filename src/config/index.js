@@ -115,6 +115,10 @@ export const shoppingViewHeaderMenuItems = [
         label: "Home",
     },
     {
+        id: "products",
+        label: "Products",
+    },
+    {
         id: "men",
         label: "Men",
     },
@@ -134,6 +138,10 @@ export const shoppingViewHeaderMenuItems = [
         id: 'accessories',
         label: "Accessories",
     },
+    {
+        id: 'search',
+        label: "Search",
+    }
 ];
 
 export const sortOptions = [

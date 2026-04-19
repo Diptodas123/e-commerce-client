@@ -7,6 +7,8 @@ import { brandOptionsMap, categoryOptionsMap } from '@/config';
 const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddToCart }) => {
 
     const isSalePriceAvailable = product.salePrice > 0;
+    const isOutOfStock = product.totalStock === 0;
+    const isLowStock = product.totalStock < 10;
 
     return (
         <Card
@@ -17,14 +19,26 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddToCart
                 <div className='relative'>
                     <img
                         src={product.image}
-                        alt={product.title}
+                        alt={`${product.title} - ${categoryOptionsMap[product.category]}`}
                         className='w-full h-75 object-cover rounded-t-lg'
                     />
-                    {isSalePriceAvailable ? (
-                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white">
-                            Sale
-                        </Badge>
-                    ) : null}
+                    {
+                        isOutOfStock ? (
+                            <Badge className="absolute top-2 left-2 bg-gray-500 text-white">
+                                Out of Stock
+                            </Badge>
+                        ) :
+                            isLowStock ? (
+                                <Badge className="absolute top-2 left-2 bg-yellow-500 text-white">
+                                    Only {product.totalStock} Left
+                                </Badge>
+                            ) :
+                                isSalePriceAvailable ? (
+                                    <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white">
+                                        Sale
+                                    </Badge>
+                                ) : null
+                    }
                 </div>
                 <CardContent className={"p-4"}>
                     <h2 className='text-xl font-bold mb-2'>{product.title}</h2>
@@ -50,8 +64,15 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddToCart
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button className={"w-full"} onClick={(e) => { handleAddToCart(e, product._id) }}>
-                        Add to cart
+                    <Button
+                        className={"w-full"}
+                        disabled={isOutOfStock}
+                        onClick={(e) => { 
+                            e.stopPropagation();
+                            handleAddToCart(e, product._id, product.totalStock);
+                        }}
+                    >
+                        {isOutOfStock ? 'Out of Stock' : 'Add to cart'}
                     </Button>
                 </CardFooter>
             </div>

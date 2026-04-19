@@ -33,6 +33,16 @@ function MenuItems() {
             return navigate('/shop/home');
         }
 
+        const isProductsMenuItem = clickedMenuItem === 'products';
+        if (isProductsMenuItem) {
+            return navigate('/shop/listing');
+        }
+
+        const isSearchMenuItem = clickedMenuItem === 'search';
+        if (isSearchMenuItem) {
+            return navigate('/shop/search');
+        }
+        
         const currentFilter = {
             category: [clickedMenuItem]
         };

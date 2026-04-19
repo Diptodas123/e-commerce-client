@@ -21,6 +21,7 @@ import { checkAuth } from '@/store/auth-slice'
 import { Spinner } from "@/components/ui/spinner";
 import PaymentSuccess from './pages/shopping-view/PaymentSuccess'
 import PaymentCancel from './pages/shopping-view/PaymentCancel'
+import SearchProducts from './pages/shopping-view/SearchProducts'
 
 function App() {
 
@@ -82,6 +83,7 @@ function App() {
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="payment-success" element={<PaymentSuccess />} />
           <Route path="payment-cancel" element={<PaymentCancel />} />
+          <Route path="search" element={<SearchProducts />} />
         </Route>
 
         {/* Unauthorized access page */}

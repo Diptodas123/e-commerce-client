@@ -20,12 +20,11 @@ import hnm from '@/assets/brands/hnm.png';
 import { Card, CardContent } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/products-slice';
+import { fetchAllFilteredProducts } from '@/store/shop/products-slice';
 import ShoppingProductTile from '@/components/shopping-view/ProductTile';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import { addToCart } from '@/store/shop/cart-slice';
 import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
+import useProductActions from '@/hooks/useProductActions';
 
 const categoriesWithIcon = [
   { id: 'men', label: "Men", icon: Mars },
@@ -55,13 +54,15 @@ const ShoppingHome = () => {
   const navigate = useNavigate();
 
   // Redux state for products
-  const { productList, productDetails } = useSelector(state => state.shopProducts);
+  const { productList } = useSelector(state => state.shopProducts);
 
-  // User info from the store
-  const { user } = useSelector(state => state.auth);
-
-  // Product Details Dialog State
-  const [openProductDetailsDialog, setOpenProductDetailsDialog] = useState(false);
+  const {
+    handleAddToCart,
+    handleGetProductDetails,
+    openProductDetailsDialog,
+    setOpenProductDetailsDialog,
+    productDetails,
+  } = useProductActions();
 
   // Navigate to listing page with filters
   const handleNavigateToListingPageWithFilters = (getCurrentItem, section) => {
@@ -73,31 +74,6 @@ const ShoppingHome = () => {
     sessionStorage.setItem('filters', JSON.stringify(currentFilter));
     navigate('/shop/listing');
   }
-
-  // Handle Get Product Details for a product
-  const handleGetProductDetails = (productId) => {
-    dispatch(fetchProductDetails(productId));
-    setOpenProductDetailsDialog(true);
-  }
-
-  // Handle Add to Cart for a product
-  const handleAddToCart = (e, productId) => {
-    e.stopPropagation();
-    dispatch(addToCart({ productId, userId: user.id, quantity: 1 })).then(data => {
-      if (data.payload?.status === "success") {
-        toast.success(data.payload?.message || "Product added to cart", {
-          duration: 3000,
-          position: 'top-right'
-        });
-      } else {
-        toast.error(data.payload?.message || "Failed to add product to cart", {
-          duration: 5000,
-          position: 'top-right'
-        });
-      }
-    });
-  }
-
 
   // Auto slide effect
   useEffect(() => {

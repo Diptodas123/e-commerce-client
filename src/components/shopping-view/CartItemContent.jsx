@@ -4,11 +4,20 @@ import { renderPrice } from '@/utils/convertToLocale';
 import { getItemTotal } from '@/utils/cartUtils';
 import { Minus, Plus, Trash } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 const CartItemContent = ({ cartItem }) => {
 
   const dispatch = useDispatch();
+
+  // User info from the store
   const { user } = useSelector((state) => state.auth);
+
+  // Cart info from the store
+  const { cartItems } = useSelector(state => state.cart);
+
+  // Product Details from the store
+  const { productList } = useSelector(state => state.shopProducts);
 
   // Handle quantity update
   const handleCartItemDelete = (itemToDelete) => {
@@ -20,6 +29,21 @@ const CartItemContent = ({ cartItem }) => {
 
   // Handle quantity update
   const handleUpdateQuantity = (itemToUpdate, newQuantity) => {
+    // If user is trying to increase quantity, check if it exceeds available stock
+    if (newQuantity > itemToUpdate.quantity) {
+      const getCartItems = cartItems?.items || [];
+      const indexOfCurrentItem = getCartItems.findIndex(item => item.productId === itemToUpdate.productId);
+      const currentQuantity = getCartItems[indexOfCurrentItem].quantity;
+      const productDetails = productList.find(product => product._id === itemToUpdate.productId);
+      if (currentQuantity + 1 > productDetails.totalStock) {
+        toast.error("Cannot add more than available stock", {
+          duration: 3000,
+          position: 'top-right'
+        });
+        return;
+      }
+    }
+  
     dispatch(updateCartItemQuantity({
       productId: itemToUpdate.productId,
       quantity: newQuantity,

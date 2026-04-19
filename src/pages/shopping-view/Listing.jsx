@@ -11,27 +11,28 @@ import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-react';
 import { sortOptions } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/products-slice';
+import { fetchAllFilteredProducts } from '@/store/shop/products-slice';
 import ShoppingProductTile from '@/components/shopping-view/ProductTile';
 import ProductsNotFound from '@/components/shopping-view/NotFound';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { createSearchParamsHelper } from '@/utils/queryParams';
 import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
-import { addToCart } from '@/store/shop/cart-slice';
-import { toast } from 'sonner';
+import useProductActions from '@/hooks/useProductActions';
 
 const ShoppingListing = () => {
 
   const dispatch = useDispatch();
 
   // Products from the store
-  const { productList, isLoading, productDetails } = useSelector(state => state.shopProducts);
+  const { productList, isLoading } = useSelector(state => state.shopProducts);
 
-  // User info from the store
-  const { user } = useSelector(state => state.auth);
-
-  // Product Details Dialog State
-  const [openProductDetailsDialog, setOpenProductDetailsDialog] = useState(false);
+  const {
+    handleAddToCart,
+    handleGetProductDetails,
+    openProductDetailsDialog,
+    setOpenProductDetailsDialog,
+    productDetails,
+  } = useProductActions();
 
   const location = useLocation();
 
@@ -75,30 +76,6 @@ const ShoppingListing = () => {
     // Persist filters to session storage so that it remains on page reload
     sessionStorage.setItem('filters', JSON.stringify(copyFilters));
   };
-
-  // Handle Get Product Details for a product
-  const handleGetProductDetails = (productId) => {
-    dispatch(fetchProductDetails(productId));
-    setOpenProductDetailsDialog(true);
-  }
-
-  // Handle Add to Cart for a product
-  const handleAddToCart = (e, productId) => {    
-    e.stopPropagation();
-    dispatch(addToCart({ productId, userId: user.id, quantity: 1 })).then(data => {
-      if (data.payload?.status === "success") {
-        toast.success(data.payload?.message || "Product added to cart", {
-          duration: 3000,
-          position: 'top-right'
-        });
-      } else {
-        toast.error(data.payload?.message || "Failed to add product to cart", {
-          duration: 5000,
-          position: 'top-right'
-        });
-      }
-    });
-  }
 
   // Load filters from sessionStorage when navigating (location.key changes)
   useEffect(() => {

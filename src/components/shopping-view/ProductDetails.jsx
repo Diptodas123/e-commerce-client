@@ -63,7 +63,13 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, handleAddToCart }
                             }
                         </div>
                         <div className='mt-5'>
-                            <Button onClick={(e) => handleAddToCart(e, productDetails?._id)} className={"w-full"}>Add to Cart</Button>
+                            <Button
+                                onClick={(e) => handleAddToCart(e, productDetails?._id, productDetails?.totalStock)}
+                                className={"w-full"}
+                                disabled={!productDetails.totalStock}
+                            >
+                                {productDetails.totalStock ? "Add to Cart" : "Out of Stock"}
+                            </Button>
                         </div>
                         <Separator />
                     </div>
