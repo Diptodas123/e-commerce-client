@@ -10,14 +10,16 @@ const AdminProductTile = ({
     setCurrentEditingProductId,
     setOpenCreateProductSheet,
     setFormData,
+    setUploadedImageUrl,
     setProductIdToDelete,
     setAlertDialog
 }) => {
 
     const handleOnEdit = (product) => {
-        setCurrentEditingProductId(product._id)
+        setCurrentEditingProductId(product._id);
         setOpenCreateProductSheet(true);
         setFormData(product);
+        setUploadedImageUrl(product.image || '');
     };
 
     const handleOnDelete = (product) => {

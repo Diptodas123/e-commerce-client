@@ -77,7 +77,7 @@ const AdminProducts = () => {
       // Dispatch action to edit product, on success the existing product in the list will be updated
       dispatch(editProduct({
         id: currentEditingProductId,
-        formData
+        formData: { ...formData, image: uploadedImageUrl || formData.image }
       })).then(data => {
         if (data.payload?.status === "success") {
           // Reset form and close sheet
@@ -179,6 +179,7 @@ const AdminProducts = () => {
                 setCurrentEditingProductId={setCurrentEditingProductId}
                 setOpenCreateProductSheet={setOpenCreateProductSheet}
                 setFormData={setFormData}
+                setUploadedImageUrl={setUploadedImageUrl}
                 setProductIdToDelete={setProductIdToDelete}
                 setAlertDialog={setAlertDialog}
               />

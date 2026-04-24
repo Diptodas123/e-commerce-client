@@ -1,5 +1,5 @@
 import { ChartNoAxesCombined, LayoutDashboard, ShoppingBasket, TicketCheck } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 
 const adminSidebarMenuItems = [
@@ -23,14 +23,18 @@ const adminSidebarMenuItems = [
 ];
 
 const MenuItems = ({ navigate, setOpen }) => {
+    const location = useLocation();
 
     return (
         <nav className='mt-8 flex flex-col gap-2'>
             {
                 adminSidebarMenuItems.map((menuItem) => {
+                    const isActive = location.pathname === menuItem.path;
                     return (
                         <div key={menuItem.id}
-                            className='flex text-xl items-center gap-2 rounded-md px-3 py-2 cursor-pointer text-muted-foreground hover:bg-muted hover:text-foreground'
+                            className={`flex text-xl items-center gap-2 rounded-md px-3 py-2 cursor-pointer hover:bg-muted hover:text-foreground 
+                                ${isActive ? 'bg-muted text-foreground font-medium' : 'text-muted-foreground'}`
+                            }
                             onClick={() => {
                                 navigate(menuItem.path);
                                 setOpen?.(false);

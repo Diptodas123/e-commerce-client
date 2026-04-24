@@ -2,19 +2,19 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { renderPrice } from '@/utils/convertToLocale';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { StarIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setProductDetails } from '@/store/shop/products-slice';
+import ProductReviews from './ProductReviews';
+import { StarIcon } from 'lucide-react';
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails, handleAddToCart }) => {
 
-    const dispath = useDispatch();
+    const dispatch = useDispatch();
+    const { averageRating, totalReviews } = useSelector((state) => state.reviews);
 
     const handleDialogClose = () => {
         setOpen(false);
-        dispath(setProductDetails());
+        dispatch(setProductDetails());
     }
 
     if (!productDetails) return null;
@@ -39,13 +39,19 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, handleAddToCart }
                         </p>
                         <div className='flex items-center gap-2'>
                             <div className='flex items-center gap-0.5'>
-                                <StarIcon className='w-5 h-5 fill-primary' />
-                                <StarIcon className='w-5 h-5 fill-primary' />
-                                <StarIcon className='w-5 h-5 fill-primary' />
-                                <StarIcon className='w-5 h-5 fill-primary' />
-                                <StarIcon className='w-5 h-5 fill-primary' />
+                                {[...Array(5)].map((_, index) => (
+                                    <StarIcon
+                                        key={index}
+                                        className={`w-5 h-5 ${index < averageRating
+                                            ? 'fill-yellow-400 text-yellow-400'
+                                            : 'fill-muted text-muted'}`
+                                        }
+                                    />
+                                ))}
                             </div>
-                            <span className='text-muted-foreground'>(4.5)</span>
+                            <span className='text-muted-foreground text-sm'>
+                                {averageRating} ({totalReviews} review{totalReviews !== 1 ? 's' : ''})
+                            </span>
                         </div>
                         <div className='flex items-center gap-4'>
                             <p className={`${productDetails?.salePrice > 0 ?
@@ -73,77 +79,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, handleAddToCart }
                         </div>
                         <Separator />
                     </div>
-                    <div className='flex-1 overflow-y-auto px-4 md:px-8'>
-                        <h2 className='text-xl font-bold mb-4 sticky top-0 bg-background pb-2 z-10 -mx-4 md:-mx-8 px-4 md:px-8'>
-                            Reviews
-                        </h2>
-                        <div className='space-y-6 pb-24'>
-                            <div className='flex gap-4'>
-                                <Avatar className={"w-10 h-10 border shrink-0"}>
-                                    <AvatarFallback>DD</AvatarFallback>
-                                </Avatar>
-                                <div className='flex-1 space-y-1'>
-                                    <div className='flex items-center gap-2'>
-                                        <h3 className='font-bold'>Dipto</h3>
-                                    </div>
-                                    <div className='flex items-center gap-0.5'>
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                    </div>
-                                    <p className='text-muted-foreground text-sm'>
-                                        This is an awesome product
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='flex gap-4'>
-                                <Avatar className={"w-10 h-10 border shrink-0"}>
-                                    <AvatarFallback>DD</AvatarFallback>
-                                </Avatar>
-                                <div className='flex-1 space-y-1'>
-                                    <div className='flex items-center gap-2'>
-                                        <h3 className='font-bold'>Dipto</h3>
-                                    </div>
-                                    <div className='flex items-center gap-0.5'>
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                    </div>
-                                    <p className='text-muted-foreground text-sm'>
-                                        This is an awesome product
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='flex gap-4'>
-                                <Avatar className={"w-10 h-10 border shrink-0"}>
-                                    <AvatarFallback>DD</AvatarFallback>
-                                </Avatar>
-                                <div className='flex-1 space-y-1'>
-                                    <div className='flex items-center gap-2'>
-                                        <h3 className='font-bold'>Dipto</h3>
-                                    </div>
-                                    <div className='flex items-center gap-0.5'>
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                        <StarIcon className='w-5 h-5 fill-primary' />
-                                    </div>
-                                    <p className='text-muted-foreground text-sm'>
-                                        This is an awesome product
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='mt-6 flex gap-2 sticky bottom-0 bg-background p-6 z-10 -mx-4 md:-mx-8 px-4 md:px-8'>
-                            <Input placeholder="Write a review" />
-                            <Button>Submit</Button>
-                        </div>
-                    </div>
+                    <ProductReviews productId={productDetails._id} />
                 </div>
             </DialogContent>
         </Dialog>

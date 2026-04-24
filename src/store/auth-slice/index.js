@@ -33,9 +33,9 @@ export const loginUser = createAsyncThunk("auth/login",
     }
 );
 
-export const checkAuth = createAsyncThunk("auth/check-auth",
+export const checkAuth = createAsyncThunk("auth/user-info",
     async () => {
-        const response = await axios.get("http://localhost:3000/api/auth/check-auth", {
+        const response = await axios.get("http://localhost:3000/api/auth/user-info", {
             withCredentials: true,
             headers: {
                 "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
@@ -58,11 +58,7 @@ export const logoutUser = createAsyncThunk("auth/logout",
 const authSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: {
-        setUser: (state, action) => {
-
-        }
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder.addCase(registerUser.pending, (state) => {
             state.isLoading = true;

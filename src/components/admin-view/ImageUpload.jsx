@@ -6,18 +6,16 @@ import { Button } from '../ui/button';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { Skeleton } from "@/components/ui/skeleton"
-import { useSelector } from 'react-redux';
 
 const ProductImageUpload = ({
     imageFile,
     setImageFile,
     uploadedImageUrl,
     setUploadedImageUrl,
-    imageLoading,
-    setImageLoading,
     imageLoadingState,
     setImageLoadingState,
-    isEditMode
+    isEditMode,
+    isCustomStyling = false
 }) => {
 
     const inputRef = useRef(null);
@@ -82,7 +80,7 @@ const ProductImageUpload = ({
     }
 
     useEffect(() => {
-        if (imageFile && !uploadedImageUrl) {
+        if (imageFile) {
             uploadedImageToCloudinary();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,14 +88,14 @@ const ProductImageUpload = ({
 
 
     return (
-        <div className='w-full max-w-md mx-auto px-6'>
+        <div className={`w-full px-6 ${isCustomStyling ? '' : 'max-w-md mx-auto'}`}>
             <Label className='text-lg font-semibold mb-2 block'>
                 Upload Product Images
             </Label>
             <div
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
-                className={`${isEditMode ? 'opacity-60' : ''} border-2 border-dashed border-gray-300 rounded-md p-3`}
+                className="border-2 border-dashed border-gray-300 rounded-md p-3"
             >
                 <Input
                     ref={inputRef}
@@ -105,18 +103,35 @@ const ProductImageUpload = ({
                     id="image-upload"
                     type="file"
                     className={"hidden"}
-                    disabled={isEditMode}
                 />
                 {
-                    !imageFile ? (
+                    isEditMode && uploadedImageUrl && !imageFile ? (
+                        // Edit mode — show existing image with hover-to-replace overlay
+                        <div className="relative group rounded-md overflow-hidden h-32">
+                            <img
+                                src={uploadedImageUrl}
+                                alt="Current product"
+                                className="w-full h-full object-cover"
+                            />
+                            <Label
+                                htmlFor="image-upload"
+                                className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-200"
+                            >
+                                <UploadCloudIcon className="w-6 h-6 text-white mb-1" />
+                                <span className="text-white text-sm font-medium">Replace Image</span>
+                            </Label>
+                        </div>
+                    ) : !imageFile ? (
+                        // No file selected — show drop zone
                         <Label
                             htmlFor="image-upload"
-                            className={`${isEditMode ? 'cursor-not-allowed' : 'cursor-pointer'} flex flex-col items-center justify-center h-32`}
+                            className="cursor-pointer flex flex-col items-center justify-center h-32"
                         >
                             <UploadCloudIcon className='w-10 h-10 text-muted-foreground mb-2' />
                             <span>Drag & drop or Click to upload image</span>
                         </Label>
                     ) : (
+                        // File selected — show processing state or file info
                         imageLoadingState ? (
                             <Skeleton className={'h-10 bg-gray-100'} />
                         ) : (

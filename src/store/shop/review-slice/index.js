@@ -3,10 +3,12 @@ import axios from "axios";
 
 const initialState = {
     reviews: [],
+    averageRating: 0,
+    totalReviews: 0,
     isLoading: false,
 };
 
-const getReviewsByProductId = createAsyncThunk(
+export const getReviewsByProductId = createAsyncThunk(
     'reviewSlice/getReviewsByProductId',
     async (productId, { rejectWithValue }) => {
         try {
@@ -20,7 +22,7 @@ const getReviewsByProductId = createAsyncThunk(
     }
 );
 
-const addReview = createAsyncThunk(
+export const addReview = createAsyncThunk(
     'reviewSlice/addReview',
     async (reviewData, { rejectWithValue }) => {
         try {
@@ -43,7 +45,9 @@ const reviewSlice = createSlice({
             state.isLoading = true;
         }).addCase(getReviewsByProductId.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.reviews = action.payload.data;
+            state.reviews = action.payload.data.reviews;
+            state.averageRating = action.payload.data.averageRating;
+            state.totalReviews = action.payload.data.totalReviews;
         }).addCase(getReviewsByProductId.rejected, (state) => {
             state.isLoading = false;
         }).addCase(addReview.pending, (state) => {
@@ -51,6 +55,9 @@ const reviewSlice = createSlice({
         }).addCase(addReview.fulfilled, (state, action) => {
             state.isLoading = false;
             state.reviews.push(action.payload.data);
+            state.totalReviews += 1;
+            const total = state.reviews.reduce((sum, r) => sum + r.rating, 0);
+            state.averageRating = parseFloat((total / state.reviews.length).toFixed(1));
         }).addCase(addReview.rejected, (state) => {
             state.isLoading = false;
         });

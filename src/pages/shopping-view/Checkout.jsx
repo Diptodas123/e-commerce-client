@@ -31,6 +31,7 @@ const ShoppingCheckout = () => {
       });
       return;
     }
+    setIsPaymentStarted(true);
 
     const orderData = {
       cartId: cartItems.cartId,
@@ -60,7 +61,11 @@ const ShoppingCheckout = () => {
 
     dispatch(createOrder(orderData)).then(data => {
       if (data?.payload?.status === 'success') {
-        setIsPaymentStarted(true);
+        // Payment initiation successful, approvalURL should be set in the state
+        toast.success("Payment initiated successfully. Redirecting to PayPal...", {
+          position: "top-right",
+          duration: 3000,
+        });
       } else if (data.payload?.data?.errors) {
         // Combine all validation errors into one message
         const errorMessages = data.payload.data.errors
@@ -147,7 +152,9 @@ const ShoppingCheckout = () => {
                     </div>
 
                     <Button className='w-full' size='lg' onClick={handleInitiatePayment}>
-                      Proceed to Payment
+                      {
+                        isPaymentStarted ? "Redirecting to PayPal..." : "Proceed to Payment"
+                      }
                     </Button>
                   </>
                 ) : (

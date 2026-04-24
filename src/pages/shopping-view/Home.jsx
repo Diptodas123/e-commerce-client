@@ -25,6 +25,7 @@ import ShoppingProductTile from '@/components/shopping-view/ProductTile';
 import { useNavigate } from 'react-router-dom';
 import ProductDetailsDialog from '@/components/shopping-view/ProductDetails';
 import useProductActions from '@/hooks/useProductActions';
+import { getFeatureImageList } from '@/store/common';
 
 const categoriesWithIcon = [
   { id: 'men', label: "Men", icon: Mars },
@@ -53,8 +54,16 @@ const ShoppingHome = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Redux state for products
+  // Redux state for products and feature images
   const { productList } = useSelector(state => state.shopProducts);
+  const { featureImageList } = useSelector(state => state.common);
+
+  // Determine active slides for the carousel
+  // If feature images are available, use them; 
+  // otherwise, fallback to default slides
+  const activeSlides = featureImageList?.length > 0
+    ? featureImageList
+    : slides.map(src => ({ image: src }));
 
   const {
     handleAddToCart,
@@ -78,27 +87,28 @@ const ShoppingHome = () => {
   // Auto slide effect
   useEffect(() => {
     const sliderInterval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % activeSlides.length);
     }, 5000);
     return () => clearInterval(sliderInterval);
-  }, []);
+  }, [activeSlides]);
 
-  // Fetch products on mount
+  // Fetch products and feature images on component mount
   useEffect(() => {
+    dispatch(getFeatureImageList());
     dispatch(fetchAllFilteredProducts({ filterParams: {}, sortParams: "price-lowtohigh" }));
   }, [dispatch]);
 
   return (
     <div className='flex flex-col min-h-screen'>
       <div className='relative w-full h-150 overflow-hidden'>
-        {
-          slides.map((slide, index) => (
+        {          
+          activeSlides.map((slide, index) => (            
             <img
               key={index}
-              src={slide}
-              alt="slide"
+              src={slide.image}
+              alt={`Feature Image ${index}`}
               className={`${index === currentSlide ? "opacity-100" : "opacity-0"} absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
-              style={index === 1 ? { objectPosition: "center 20%" } : {}}
+              style={index === 2 ? { objectPosition: "center 20%" } : {}}
             />
           ))
         }
@@ -106,14 +116,14 @@ const ShoppingHome = () => {
           variant='outline'
           size='icon'
           className={"absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"}
-          onClick={() => setCurrentSlide(prevSlide => (prevSlide - 1 + slides.length) % slides.length)}
+          onClick={() => setCurrentSlide(prevSlide => (prevSlide - 1 + activeSlides.length) % activeSlides.length)}
         >
           <ChevronLeftIcon className='w-4 h-4' />
         </Button>
         <Button
           variant='outline'
           size='icon'
-          onClick={() => setCurrentSlide(prevSlide => (prevSlide + 1) % slides.length)}
+          onClick={() => setCurrentSlide(prevSlide => (prevSlide + 1) % activeSlides.length)}
           className={"absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"}
         >
           <ChevronRightIcon className='w-4 h-4' />

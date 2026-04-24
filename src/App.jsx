@@ -1,27 +1,28 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import './App.css'
-import AuthLayout from './components/auth/layout'
-import AuthLogin from './pages/auth/Login'
-import AuthRegister from './pages/auth/Register'
-import AdminLayout from './components/admin-view/layout'
-import AdminProducts from './pages/admin-view/Products'
-import AdminOrders from './pages/admin-view/Orders'
-import AdminDashboard from './pages/admin-view/Dashboard'
-import ShoppingLayout from './components/shopping-view/Layout'
-import NotFound from './pages/not-found'
-import ShoppingAccount from './pages/shopping-view/Account'
-import ShoppingCheckout from './pages/shopping-view/Checkout'
-import ShoppingListing from './pages/shopping-view/Listing'
-import ShoppingHome from '@/pages/shopping-view/Home'
-import CheckAuth from '@/components/common/CheckAuth'
-import UnauthorizedPage from '@/pages/unauth-page'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { checkAuth } from '@/store/auth-slice'
-import { Spinner } from "@/components/ui/spinner";
-import PaymentSuccess from './pages/shopping-view/PaymentSuccess'
-import PaymentCancel from './pages/shopping-view/PaymentCancel'
-import SearchProducts from './pages/shopping-view/SearchProducts'
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { useEffect, lazy } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import './App.css';
+import { checkAuth } from '@/store/auth-slice';
+
+const AuthLayout = lazy(() => import('@/components/auth/layout'));
+const AuthLogin = lazy(() => import('@/pages/auth/Login'));
+const AuthRegister = lazy(() => import('@/pages/auth/Register'));
+const AdminLayout = lazy(() => import('@/components/admin-view/layout'));
+const AdminProducts = lazy(() => import('@/pages/admin-view/Products'));
+const AdminOrders = lazy(() => import('@/pages/admin-view/Orders'));
+const AdminDashboard = lazy(() => import('@/pages/admin-view/Dashboard'));
+const ShoppingLayout = lazy(() => import('@/components/shopping-view/Layout'));
+const NotFound = lazy(() => import('@/pages/not-found'));
+const ShoppingAccount = lazy(() => import('@/pages/shopping-view/Account'));
+const ShoppingCheckout = lazy(() => import('@/pages/shopping-view/Checkout'));
+const ShoppingListing = lazy(() => import('@/pages/shopping-view/Listing'));
+const ShoppingHome = lazy(() => import('@/pages/shopping-view/Home'));
+const CheckAuth = lazy(() => import('@/components/common/CheckAuth'));
+const UnauthorizedPage = lazy(() => import('@/pages/unauth-page'));
+const PaymentSuccess = lazy(() => import('@/pages/shopping-view/PaymentSuccess'));
+const PaymentCancel = lazy(() => import('@/pages/shopping-view/PaymentCancel'));
+const SearchProducts = lazy(() => import('@/pages/shopping-view/SearchProducts'));
+const LoadingScreen = lazy(() => import('@/components/common/LoadingScreen'));
 
 function App() {
 
@@ -33,19 +34,7 @@ function App() {
   }, [dispatch]);
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-background to-muted">
-        <div className="relative">
-          <Spinner className="size-12 text-primary" />
-          <div className="absolute inset-0 animate-ping">
-            <Spinner className="size-12 text-primary opacity-20" />
-          </div>
-        </div>
-        <p className="mt-6 text-sm text-muted-foreground animate-pulse">
-          Loading your experience...
-        </p>
-      </div>
-    );
+    return <LoadingScreen />;
   };
 
   return (
