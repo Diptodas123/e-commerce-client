@@ -10,7 +10,7 @@ export const getSearchResults = createAsyncThunk("/search/products",
     async (keyword, { rejectWithValue }) => {
         try {
             const response = await axios.get(
-                `http://localhost:3000/api/search/products?keyword=${keyword}`, {
+                `http://localhost:3000/api/shop/search/products?keyword=${keyword}`, {
                 withCredentials: true,
             });
             

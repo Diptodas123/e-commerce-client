@@ -9,7 +9,7 @@ const initialState = {
 export const addToCart = createAsyncThunk("/cart/add",
     async ({ productId, quantity, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/cart/${userId}`, { productId, quantity }, {
+            const response = await axios.post(`http://localhost:3000/api/shop/cart/${userId}`, { productId, quantity }, {
                 withCredentials: true,
             });
             return response?.data;
@@ -22,7 +22,7 @@ export const addToCart = createAsyncThunk("/cart/add",
 export const fetchCartItems = createAsyncThunk("/cart/fetchcartitems",
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/cart/${userId}`, {
+            const response = await axios.get(`http://localhost:3000/api/shop/cart/${userId}`, {
                 withCredentials: true,
             });
             return response?.data;
@@ -35,7 +35,7 @@ export const fetchCartItems = createAsyncThunk("/cart/fetchcartitems",
 export const removeFromCart = createAsyncThunk("/cart/removefromcart",
     async ({ productId, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/cart/${productId}/${userId}`, {
+            const response = await axios.delete(`http://localhost:3000/api/shop/cart/${userId}/${productId}`, {
                 withCredentials: true,
             });
             return response?.data;
@@ -48,7 +48,7 @@ export const removeFromCart = createAsyncThunk("/cart/removefromcart",
 export const updateCartItemQuantity = createAsyncThunk("/cart/updatequantity",
     async ({ productId, quantity, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/cart/${productId}/${userId}`, { quantity }, {
+            const response = await axios.put(`http://localhost:3000/api/shop/cart/${userId}/${productId}`, { quantity }, {
                 withCredentials: true,
             });
             return response?.data;

@@ -10,7 +10,7 @@ const initialState = {
 export const addAddress = createAsyncThunk('address/addAddress',
     async ({ userId, formData }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/address/${userId}`,
+            const response = await axios.post(`http://localhost:3000/api/shop/address/${userId}`,
                 formData, {
                 withCredentials: true,
             });
@@ -24,7 +24,7 @@ export const addAddress = createAsyncThunk('address/addAddress',
 export const fetchAllAddresses = createAsyncThunk('address/fetchAllAddresses',
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/address/${userId}`, {
+            const response = await axios.get(`http://localhost:3000/api/shop/address/${userId}`, {
                 withCredentials: true,
             });
             return response?.data;
@@ -37,7 +37,7 @@ export const fetchAllAddresses = createAsyncThunk('address/fetchAllAddresses',
 export const editAddress = createAsyncThunk('address/editAddress',
     async ({ userId, addressId, formData }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/address/${userId}/${addressId}`,
+            const response = await axios.put(`http://localhost:3000/api/shop/address/${userId}/${addressId}`,
                 formData, {
                 withCredentials: true,
             });
@@ -51,7 +51,7 @@ export const editAddress = createAsyncThunk('address/editAddress',
 export const deleteAddress = createAsyncThunk('address/deleteAddress',
     async ({ userId, addressId }, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/address/${userId}/${addressId}`, {
+            const response = await axios.delete(`http://localhost:3000/api/shop/address/${userId}/${addressId}`, {
                 withCredentials: true,
             });
             return response?.data;

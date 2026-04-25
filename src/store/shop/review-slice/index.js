@@ -12,7 +12,7 @@ export const getReviewsByProductId = createAsyncThunk(
     'reviewSlice/getReviewsByProductId',
     async (productId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/reviews/${productId}`, {
+            const response = await axios.get(`http://localhost:3000/api/shop/reviews/${productId}`, {
                 withCredentials: true,
             });
             return response?.data;
@@ -26,7 +26,7 @@ export const addReview = createAsyncThunk(
     'reviewSlice/addReview',
     async (reviewData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/reviews/add`, reviewData, {
+            const response = await axios.post(`http://localhost:3000/api/shop/reviews`, reviewData, {
                 withCredentials: true,
             });
             return response?.data;

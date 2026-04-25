@@ -11,7 +11,7 @@ const initialState = {
 export const fetchAllOrders = createAsyncThunk("/order/fetchAllOrders",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/order/admin/orders`, {
+            const response = await axios.get(`http://localhost:3000/api/admin/orders`, {
                 withCredentials: true,
             });
             return response?.data;
@@ -24,7 +24,7 @@ export const fetchAllOrders = createAsyncThunk("/order/fetchAllOrders",
 export const fetchOrderDetails = createAsyncThunk("/order/fetchOrderDetails",
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/order/admin/order-details/${id}`, {
+            const response = await axios.get(`http://localhost:3000/api/admin/orders/${id}`, {
                 withCredentials: true,
             });
             return response?.data;
@@ -37,7 +37,7 @@ export const fetchOrderDetails = createAsyncThunk("/order/fetchOrderDetails",
 export const updateOrderStatus = createAsyncThunk("/order/updateOrderStatus",
     async ({ id, status }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/order/admin/update-order-status/${id}`, { status }, {
+            const response = await axios.put(`http://localhost:3000/api/admin/orders/${id}`, { status }, {
                 withCredentials: true,
             });
             return response?.data;

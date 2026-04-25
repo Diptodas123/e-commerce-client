@@ -57,7 +57,7 @@ const ProductImageUpload = ({
         data.append('image', imageFile);
 
         try {
-            const response = await axios.post(`http://localhost:3000/api/admin/products/upload-image`, data, {
+            const response = await axios.post(`http://localhost:3000/api/upload-image`, data, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'multipart/form-data'

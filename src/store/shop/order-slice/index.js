@@ -12,7 +12,7 @@ const initialState = {
 export const createOrder = createAsyncThunk("/order/createNewOrder",
     async (orderData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/order`, orderData, {
+            const response = await axios.post(`http://localhost:3000/api/shop/orders`, orderData, {
                 withCredentials: true,
             });
             return response?.data;
@@ -25,7 +25,7 @@ export const createOrder = createAsyncThunk("/order/createNewOrder",
 export const capturePayment = createAsyncThunk("/order/capturePayment",
     async ({ userId, paymentData }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/order/capture-payment/${userId}`, paymentData, {
+            const response = await axios.post(`http://localhost:3000/api/shop/orders/capture-payment/${userId}`, paymentData, {
                 withCredentials: true,
             });
             return response?.data;
@@ -39,7 +39,7 @@ export const capturePayment = createAsyncThunk("/order/capturePayment",
 export const getAllOrdersByUser = createAsyncThunk("/order/getAllOrdersByUser",
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/order/user-orders/${userId}`, {
+            const response = await axios.get(`http://localhost:3000/api/shop/orders/user-orders/${userId}`, {
                 withCredentials: true,
             });
             return response?.data;
@@ -52,7 +52,7 @@ export const getAllOrdersByUser = createAsyncThunk("/order/getAllOrdersByUser",
 export const getOrderDetails = createAsyncThunk("/order/getOrderDetails",
     async ({ id, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/order/details/${userId}/${id}`, {
+            const response = await axios.get(`http://localhost:3000/api/shop/orders/details/${userId}/${id}`, {
                 withCredentials: true,
             });
             return response?.data;
