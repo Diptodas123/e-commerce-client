@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 import { createSearchParamsHelper } from "@/utils/queryParams";
 
 const initialState = {
@@ -17,7 +17,7 @@ export const fetchAllFilteredProducts = createAsyncThunk("/products/fetchallfilt
         const queryString = [filterQuery, sortQuery].filter(Boolean).join('&');
 
         try {
-            const response = await axios.get(`http://localhost:3000/api/shop/products?${queryString}`);
+            const response = await apiClient.get(`/api/shop/products?${queryString}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Something went wrong" });
@@ -28,7 +28,7 @@ export const fetchAllFilteredProducts = createAsyncThunk("/products/fetchallfilt
 export const fetchProductDetails = createAsyncThunk("/products/fetchproductdetails",
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/shop/products/${id}`);
+            const response = await apiClient.get(`/api/shop/products/${id}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Something went wrong" });

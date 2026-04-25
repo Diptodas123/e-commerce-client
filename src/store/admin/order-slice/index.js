@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '@/lib/apiClient';
 
 const initialState = {
     isLoading: false,
@@ -11,9 +11,7 @@ const initialState = {
 export const fetchAllOrders = createAsyncThunk("/order/fetchAllOrders",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/admin/orders`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.get('/api/admin/orders');
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error fetching orders" });
@@ -24,9 +22,7 @@ export const fetchAllOrders = createAsyncThunk("/order/fetchAllOrders",
 export const fetchOrderDetails = createAsyncThunk("/order/fetchOrderDetails",
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/admin/orders/${id}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.get(`/api/admin/orders/${id}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error fetching order details" });
@@ -37,9 +33,7 @@ export const fetchOrderDetails = createAsyncThunk("/order/fetchOrderDetails",
 export const updateOrderStatus = createAsyncThunk("/order/updateOrderStatus",
     async ({ id, status }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/admin/orders/${id}`, { status }, {
-                withCredentials: true,
-            });
+            const response = await apiClient.put(`/api/admin/orders/${id}`, { status });
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error updating order status" });

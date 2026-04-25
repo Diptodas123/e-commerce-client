@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 const initialState = {
     isLoading: false,
@@ -9,12 +9,7 @@ const initialState = {
 export const addNewProduct = createAsyncThunk("/products/addnewproduct",
     async (formData, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/admin/products", formData, {
-                withCredentials: true,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+            const response = await apiClient.post("/api/admin/products", formData);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Failed to add product" });
@@ -25,9 +20,7 @@ export const addNewProduct = createAsyncThunk("/products/addnewproduct",
 export const fetchAllProducts = createAsyncThunk("/products/fetchallproducts",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get("http://localhost:3000/api/admin/products", {
-                withCredentials: true
-            });
+            const response = await apiClient.get("/api/admin/products");
 
             return response?.data;
         } catch (error) {
@@ -39,12 +32,7 @@ export const fetchAllProducts = createAsyncThunk("/products/fetchallproducts",
 export const editProduct = createAsyncThunk("/products/editproduct",
     async ({ id, formData }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/admin/products/${id}`, formData, {
-                withCredentials: true,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+            const response = await apiClient.put(`/api/admin/products/${id}`, formData);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Failed to add product" });
@@ -55,9 +43,7 @@ export const editProduct = createAsyncThunk("/products/editproduct",
 export const deleteProduct = createAsyncThunk("/products/deleteproduct",
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/admin/products/${id}`, {
-                withCredentials: true
-            });
+            const response = await apiClient.delete(`/api/admin/products/${id}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Failed to add product" });

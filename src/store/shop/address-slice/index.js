@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '@/lib/apiClient';
 
 const initialState = {
     isLoading: false,
@@ -10,10 +10,7 @@ const initialState = {
 export const addAddress = createAsyncThunk('address/addAddress',
     async ({ userId, formData }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/shop/address/${userId}`,
-                formData, {
-                withCredentials: true,
-            });
+            const response = await apiClient.post(`/api/shop/address/${userId}`, formData);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error adding address" });
@@ -24,9 +21,7 @@ export const addAddress = createAsyncThunk('address/addAddress',
 export const fetchAllAddresses = createAsyncThunk('address/fetchAllAddresses',
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/shop/address/${userId}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.get(`/api/shop/address/${userId}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error fetching addresses" });
@@ -37,10 +32,7 @@ export const fetchAllAddresses = createAsyncThunk('address/fetchAllAddresses',
 export const editAddress = createAsyncThunk('address/editAddress',
     async ({ userId, addressId, formData }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/shop/address/${userId}/${addressId}`,
-                formData, {
-                withCredentials: true,
-            });
+            const response = await apiClient.put(`/api/shop/address/${userId}/${addressId}`, formData);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error editing address" });
@@ -51,9 +43,7 @@ export const editAddress = createAsyncThunk('address/editAddress',
 export const deleteAddress = createAsyncThunk('address/deleteAddress',
     async ({ userId, addressId }, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/shop/address/${userId}/${addressId}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.delete(`/api/shop/address/${userId}/${addressId}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error deleting address" });

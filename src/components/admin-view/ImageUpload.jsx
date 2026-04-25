@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react'
 import { Input } from '@/components/ui/input';
 import { FileIcon, UploadCloudIcon, XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
-import axios from 'axios';
+import apiClient from '@/lib/apiClient';
 import { toast } from 'sonner';
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -57,11 +57,8 @@ const ProductImageUpload = ({
         data.append('image', imageFile);
 
         try {
-            const response = await axios.post(`http://localhost:3000/api/upload-image`, data, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+            const response = await apiClient.post('/api/upload-image', data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
 
             if (response?.data?.status === 'success') {

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 const initialState = {
     isAuthenticated: false,
@@ -10,9 +10,7 @@ const initialState = {
 export const registerUser = createAsyncThunk("auth/register",
     async (formData, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/auth/register", formData, {
-                withCredentials: true
-            });
+            const response = await apiClient.post("/api/auth/register", formData);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Registration failed" });
@@ -23,9 +21,7 @@ export const registerUser = createAsyncThunk("auth/register",
 export const loginUser = createAsyncThunk("auth/login",
     async (formData, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/auth/login", formData, {
-                withCredentials: true
-            });
+            const response = await apiClient.post("/api/auth/login", formData);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Login failed" });
@@ -35,8 +31,7 @@ export const loginUser = createAsyncThunk("auth/login",
 
 export const checkAuth = createAsyncThunk("auth/user-info",
     async () => {
-        const response = await axios.get("http://localhost:3000/api/auth/user-info", {
-            withCredentials: true,
+        const response = await apiClient.get("/api/auth/user-info", {
             headers: {
                 "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
             }
@@ -47,9 +42,7 @@ export const checkAuth = createAsyncThunk("auth/user-info",
 
 export const logoutUser = createAsyncThunk("auth/logout",
     async () => {
-        const response = await axios.post("http://localhost:3000/api/auth/logout", {}, {
-            withCredentials: true,
-        });
+        const response = await apiClient.post("/api/auth/logout", {});
         return response.data;
     }
 );

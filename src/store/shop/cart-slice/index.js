@@ -1,5 +1,5 @@
-import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import apiClient from "@/lib/apiClient";
 
 const initialState = {
     isLoading: false,
@@ -9,9 +9,7 @@ const initialState = {
 export const addToCart = createAsyncThunk("/cart/add",
     async ({ productId, quantity, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/shop/cart/${userId}`, { productId, quantity }, {
-                withCredentials: true,
-            });
+            const response = await apiClient.post(`/api/shop/cart/${userId}`, { productId, quantity });
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error adding to cart" });
@@ -22,9 +20,7 @@ export const addToCart = createAsyncThunk("/cart/add",
 export const fetchCartItems = createAsyncThunk("/cart/fetchcartitems",
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/shop/cart/${userId}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.get(`/api/shop/cart/${userId}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error fetching cart items" });
@@ -35,9 +31,7 @@ export const fetchCartItems = createAsyncThunk("/cart/fetchcartitems",
 export const removeFromCart = createAsyncThunk("/cart/removefromcart",
     async ({ productId, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/shop/cart/${userId}/${productId}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.delete(`/api/shop/cart/${userId}/${productId}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error removing from cart" });
@@ -48,9 +42,7 @@ export const removeFromCart = createAsyncThunk("/cart/removefromcart",
 export const updateCartItemQuantity = createAsyncThunk("/cart/updatequantity",
     async ({ productId, quantity, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/shop/cart/${userId}/${productId}`, { quantity }, {
-                withCredentials: true,
-            });
+            const response = await apiClient.put(`/api/shop/cart/${userId}/${productId}`, { quantity });
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error updating cart item quantity" });

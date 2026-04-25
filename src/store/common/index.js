@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 const initialState = {
     isLoading: false,
@@ -10,9 +10,7 @@ export const getFeatureImageList = createAsyncThunk(
     'common/getFeatureImageList',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/feature-images`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.get('/api/feature-images');
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error fetching feature images" });
@@ -24,9 +22,7 @@ export const addFeatureImage = createAsyncThunk(
     'common/addFeatureImage',
     async (image, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/feature-images`, { image }, {
-                withCredentials: true,
-            });
+            const response = await apiClient.post('/api/feature-images', { image });
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error adding feature image" });
@@ -38,9 +34,7 @@ export const deleteFeatureImage = createAsyncThunk(
     'common/deleteFeatureImage',
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/feature-images/${id}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.delete(`/api/feature-images/${id}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error deleting feature image" });

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '@/lib/apiClient';
 
 const initialState = {
     isLoading: false,
@@ -12,9 +12,7 @@ const initialState = {
 export const createOrder = createAsyncThunk("/order/createNewOrder",
     async (orderData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/shop/orders`, orderData, {
-                withCredentials: true,
-            });
+            const response = await apiClient.post('/api/shop/orders', orderData);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error creating order" });
@@ -25,9 +23,7 @@ export const createOrder = createAsyncThunk("/order/createNewOrder",
 export const capturePayment = createAsyncThunk("/order/capturePayment",
     async ({ userId, paymentData }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/shop/orders/capture-payment/${userId}`, paymentData, {
-                withCredentials: true,
-            });
+            const response = await apiClient.post(`/api/shop/orders/capture-payment/${userId}`, paymentData);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error creating order" });
@@ -39,9 +35,7 @@ export const capturePayment = createAsyncThunk("/order/capturePayment",
 export const getAllOrdersByUser = createAsyncThunk("/order/getAllOrdersByUser",
     async (userId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/shop/orders/user-orders/${userId}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.get(`/api/shop/orders/user-orders/${userId}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error fetching orders" });
@@ -52,9 +46,7 @@ export const getAllOrdersByUser = createAsyncThunk("/order/getAllOrdersByUser",
 export const getOrderDetails = createAsyncThunk("/order/getOrderDetails",
     async ({ id, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/shop/orders/details/${userId}/${id}`, {
-                withCredentials: true,
-            });
+            const response = await apiClient.get(`/api/shop/orders/details/${userId}/${id}`);
             return response?.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Error fetching order details" });
