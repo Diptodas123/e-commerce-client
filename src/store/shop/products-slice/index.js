@@ -4,6 +4,7 @@ import { createSearchParamsHelper } from "@/utils/queryParams";
 
 const initialState = {
     isLoading: false,
+    isDetailsLoading: false,
     productList: [],
     productDetails: null
 }
@@ -55,12 +56,12 @@ const shopProductsSlice = createSlice({
             state.productList = [];
         });
         builder.addCase(fetchProductDetails.pending, (state) => {
-            state.isLoading = true;
+            state.isDetailsLoading = true;
         }).addCase(fetchProductDetails.fulfilled, (state, action) => {
-            state.isLoading = false;
+            state.isDetailsLoading = false;
             state.productDetails = action.payload.data;
         }).addCase(fetchProductDetails.rejected, (state) => {
-            state.isLoading = false;
+            state.isDetailsLoading = false;
             state.productDetails = null;
         });
     }

@@ -8,10 +8,9 @@ import { getCartTotal } from '@/utils/cartUtils';
 import { renderPrice } from '@/utils/convertToLocale';
 import { useDispatch, useSelector } from 'react-redux';
 import { ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { createOrder } from '@/store/shop/order-slice';
-import { useNavigate } from 'react-router-dom';
 
 const ShoppingCheckout = () => {
 
@@ -22,7 +21,6 @@ const ShoppingCheckout = () => {
   const [isPaymentStarted, setIsPaymentStarted] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleInitiatePayment = () => {
     if (!currentSelectedAddress) {
@@ -85,9 +83,11 @@ const ShoppingCheckout = () => {
     });
   }
 
-  if (approvalURL && isPaymentStarted) {
-    navigate(approvalURL);
-  }
+  useEffect(() => {
+    if (approvalURL && isPaymentStarted) {
+      window.location.href = approvalURL;
+    }
+  }, [approvalURL, isPaymentStarted]);
 
 
   return (

@@ -9,7 +9,7 @@ const useProductActions = () => {
 
     const { cartItems } = useSelector(state => state.cart);
     const { user } = useSelector(state => state.auth);
-    const { productDetails } = useSelector(state => state.shopProducts);
+    const { productDetails, isDetailsLoading } = useSelector(state => state.shopProducts);
 
     const [openProductDetailsDialog, setOpenProductDetailsDialog] = useState(false);
 
@@ -60,6 +60,7 @@ const useProductActions = () => {
         openProductDetailsDialog,
         setOpenProductDetailsDialog,
         productDetails,
+        isDetailsLoading,
     };
 };
 

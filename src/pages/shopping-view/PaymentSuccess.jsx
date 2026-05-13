@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { capturePayment } from "@/store/shop/order-slice";
+import { resetCart } from "@/store/shop/cart-slice";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -49,6 +50,7 @@ const PaymentSuccess = () => {
       if (data?.payload?.status === 'success') {
         setPaymentStatus('success');
         sessionStorage.removeItem('currentOrderId');
+        dispatch(resetCart());
       } else {
         setPaymentStatus('error');
         setErrorMessage(data?.payload?.message || 'Payment capture failed');
