@@ -4,6 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import { checkAuth } from '@/store/auth-slice';
 
+// Critical path — eagerly imported so the home screen renders without extra chunk fetches
+import CheckAuth from '@/components/common/CheckAuth';
+import LoadingScreen from '@/components/common/LoadingScreen';
+import ShoppingLayout from '@/components/shopping-view/Layout';
+import ShoppingHome from '@/pages/shopping-view/Home';
+
+// Non-critical — lazy-loaded to keep the initial bundle small
 const AuthLayout = lazy(() => import('@/components/auth/layout'));
 const AuthLogin = lazy(() => import('@/pages/auth/Login'));
 const AuthRegister = lazy(() => import('@/pages/auth/Register'));
@@ -11,18 +18,14 @@ const AdminLayout = lazy(() => import('@/components/admin-view/layout'));
 const AdminProducts = lazy(() => import('@/pages/admin-view/Products'));
 const AdminOrders = lazy(() => import('@/pages/admin-view/Orders'));
 const AdminDashboard = lazy(() => import('@/pages/admin-view/Dashboard'));
-const ShoppingLayout = lazy(() => import('@/components/shopping-view/Layout'));
 const NotFound = lazy(() => import('@/pages/not-found'));
 const ShoppingAccount = lazy(() => import('@/pages/shopping-view/Account'));
 const ShoppingCheckout = lazy(() => import('@/pages/shopping-view/Checkout'));
 const ShoppingListing = lazy(() => import('@/pages/shopping-view/Listing'));
-const ShoppingHome = lazy(() => import('@/pages/shopping-view/Home'));
-const CheckAuth = lazy(() => import('@/components/common/CheckAuth'));
 const UnauthorizedPage = lazy(() => import('@/pages/unauth-page'));
 const PaymentSuccess = lazy(() => import('@/pages/shopping-view/PaymentSuccess'));
 const PaymentCancel = lazy(() => import('@/pages/shopping-view/PaymentCancel'));
 const SearchProducts = lazy(() => import('@/pages/shopping-view/SearchProducts'));
-const LoadingScreen = lazy(() => import('@/components/common/LoadingScreen'));
 
 function App() {
 
